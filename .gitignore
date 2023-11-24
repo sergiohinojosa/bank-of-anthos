@@ -211,3 +211,7 @@ venv-*
 
 # go for ci
 go/
+
+
+# Generated files
+**/gen/**
