@@ -151,24 +151,29 @@ data:
         protocols:
           grpc:
           http:
-    processors:
-      batch:
-    extensions:
-      health_check:
     exporters:
       otlphttp:
-        endpoint: "https://YOUR_ENVIRONMENT_ID.live.dynatrace.com/api/v2/otlp"
+        endpoint: "$DT_ENDPOINT/api/v2/otlp"
         headers:
-          Authorization: "Api-Token <TOKEN>"
+          Authorization: "Api-Token $DT_API_TOKEN"
+    processors:
+      batch:
+        send_batch_max_size: 1000
+        timeout: 30s
+        send_batch_size : 800
     service:
-      extensions: [health_check]
       pipelines:
         traces:
           receivers: [otlp]
           processors: [batch]
           exporters: [otlphttp]
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlphttp]
         logs:
           receivers: [otlp]
+          processors: [batch]
           exporters: [otlphttp]
 ---
 apiVersion: v1
