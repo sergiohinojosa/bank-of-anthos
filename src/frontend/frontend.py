@@ -739,7 +739,7 @@ def create_app():
         app.logger.info("✅ Tracing enabled.")
         trace.set_tracer_provider(TracerProvider())
       # cloud_trace_exporter = CloudTraceSpanExporter()
-        otlp_exporter = OTLPSpanExporter(endpoint="0.0.0.0:4317") #collector endpoint goes here
+        otlp_exporter = OTLPSpanExporter(endpoint="otel-collector:4318") #collector endpoint goes here
         trace.get_tracer_provider().add_span_processor(
            # BatchSpanProcessor(cloud_trace_exporter)
             BatchSpanProcessor(otlp_exporter)
