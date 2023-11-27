@@ -1,0 +1,32 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+processors:
+  cumulativetodelta:
+
+exporters:
+  otlphttp:
+    endpoint: "https://YOUR_ENVIRONMENT_ID.live.dynatrace.com/api/v2/otlp" 
+    headers:
+      Authorization: "Api-Token $DT_API_TOKEN"
+
+processors:
+  batch:
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [otlphttp]
+
+    metrics:
+      receivers: [otlp]
+      processors: [cumulativetodelta]
+      exporters: [otlphttp]
+
+    logs:
+      receivers: [otlp]
+      exporters: [otlphttp]
