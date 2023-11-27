@@ -35,18 +35,17 @@ from opentelemetry import trace
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.propagate import set_global_textmap
-from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 
 # Import exporters
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
 from opentelemetry.exporter.otlp.proto.http._log_exporter import OTLPLogExporter
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 
 # Trace imports
 from opentelemetry.trace import set_tracer_provider, get_tracer_provider
 from opentelemetry.sdk.trace import TracerProvider, sampling
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-
 from opentelemetry.propagators.cloud_trace_propagator import CloudTraceFormatPropagator
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
@@ -736,14 +735,18 @@ def create_app():
 
     # Set up tracing and export spans to Cloud Trace/OTel Collector.
     if os.environ['ENABLE_TRACING'] == "true":
-        app.logger.info("✅ Tracing enabled.")
-        trace.set_tracer_provider(TracerProvider())
-      # cloud_trace_exporter = CloudTraceSpanExporter()
-        otlp_exporter = OTLPSpanExporter(endpoint="otel-collector:4318") #collector endpoint goes here
-        trace.get_tracer_provider().add_span_processor(
-           # BatchSpanProcessor(cloud_trace_exporter)
-            BatchSpanProcessor(otlp_exporter)
-        )
+         app.logger.info("✅ Tracing enabled.")
+
+        # Service name is required for most backends
+        resource = Resource(attributes={
+        SERVICE_NAME: "frontend-service"
+        })
+       
+        provider = TracerProvider(resource=resource)
+        processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="otel-collector:4318"))
+        provider.add_span_processor(processor)
+        trace.set_tracer_provider(provider)
+     
         set_global_textmap(CloudTraceFormatPropagator())
         # Add tracing auto-instrumentation for Flask, jinja and requests
         FlaskInstrumentor().instrument_app(app)
