@@ -735,13 +735,10 @@ def create_app():
 
     # Set up tracing and export spans to Cloud Trace/OTel Collector.
     if os.environ['ENABLE_TRACING'] == "true":
-         app.logger.info("✅ Tracing enabled.")
+        app.logger.info("✅ Tracing enabled.")
 
-        # Service name is required for most backends
-        resource = Resource(attributes={
-        SERVICE_NAME: "frontend-service"
-        })
-       
+        resource = Resource.create().set_attribute(SERVICE_NAME, "frontend-service")
+
         provider = TracerProvider(resource=resource)
         processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="otel-collector:4318"))
         provider.add_span_processor(processor)
