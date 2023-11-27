@@ -161,6 +161,8 @@ public final class BalanceReaderController {
                 return new ResponseEntity<>("not authorized",
                     HttpStatus.UNAUTHORIZED);
             }
+
+            LOGGER.warn("A CPU issue is happening here when fetching the balance of an Account");
             // Load from cache
             Long balance = cache.get(accountId);
             return new ResponseEntity<Long>(balance, HttpStatus.OK);
