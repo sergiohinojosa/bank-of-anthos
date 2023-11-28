@@ -733,7 +733,11 @@ def create_app():
     if os.environ['ENABLE_TRACING'] == "true":
         app.logger.info("✅ Tracing enabled.")
 
-        resource = Resource.create().set_attribute(SERVICE_NAME, "frontend-service")
+        #resource = Resource.create().attributes.setdefault.set(SERVICE_NAME, "frontend-service")
+        # Service name is required for most backends
+        resource = Resource(attributes={
+            SERVICE_NAME: "frontend"
+        })
 
         provider = TracerProvider(resource=resource)
         processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="otel-collector:4318"))
