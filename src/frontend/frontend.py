@@ -742,7 +742,6 @@ def create_app():
         processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="otel-collector:4318"))
         provider.add_span_processor(processor)
         trace.set_tracer_provider(provider)
-     
         set_global_textmap(CloudTraceFormatPropagator())
         # Add tracing auto-instrumentation for Flask, jinja and requests
         FlaskInstrumentor().instrument_app(app)
