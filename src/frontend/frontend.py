@@ -740,7 +740,7 @@ def create_app():
         })
 
         provider = TracerProvider(resource=resource)
-        processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://otel-collector:4318"))
+        processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://10.104.0.107:4318"))
         provider.add_span_processor(processor)
         trace.set_tracer_provider(provider)
         set_global_textmap(CloudTraceFormatPropagator())
