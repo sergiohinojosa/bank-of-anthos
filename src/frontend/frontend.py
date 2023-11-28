@@ -39,17 +39,14 @@ from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 
 # Import exporters
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
-from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
-from opentelemetry.exporter.otlp.proto.http._log_exporter import OTLPLogExporter
+#from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
+#from opentelemetry.exporter.otlp.proto.http._log_exporter import OTLPLogExporter
 
 # Trace imports
-from opentelemetry.trace import set_tracer_provider, get_tracer_provider
-from opentelemetry.sdk.trace import TracerProvider, sampling
 from opentelemetry.propagators.cloud_trace_propagator import CloudTraceFormatPropagator
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from opentelemetry.instrumentation.jinja2 import Jinja2Instrumentor
-from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 
 # Local imports
 from api_call import ApiCall, ApiRequest
