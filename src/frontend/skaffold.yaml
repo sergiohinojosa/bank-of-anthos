@@ -45,9 +45,6 @@ test:
             - "requirements.txt"
 deploy:
   kubectl: {}
-  kustomize:
-    paths:
-      - src\frontend\k8s\base
   tolerateFailuresUntilDeadline: true
 profiles:
 - name: development
