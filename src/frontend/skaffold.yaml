@@ -26,6 +26,9 @@ build:
     context: .
   tagPolicy:
     sha256: {}
+  
+  - image: otel-collector
+    context: .
 test:
   - image: frontend # code style
     context: .
