@@ -46,7 +46,6 @@ test:
 deploy:
   kubectl: {}
   tolerateFailuresUntilDeadline: true
-  manifests: ../../kubernetes-manifests\otel-collector-config.yaml
 profiles:
 - name: development
   activation:
