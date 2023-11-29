@@ -740,7 +740,10 @@ def create_app():
         })
 
         provider = TracerProvider(resource=resource)
-        processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="otel-collector.development-banking.svc.cluster.local:4318"))
+        processor = BatchSpanProcessor(
+            OTLPSpanExporter(
+                endpoint="otel-collector.development-banking.svc.cluster.local:4318"
+                ))
         #my-svc.my-namespace.svc.cluster-domain.example
         provider.add_span_processor(processor)
         trace.set_tracer_provider(provider)
