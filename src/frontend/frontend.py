@@ -742,7 +742,11 @@ def create_app():
         provider = TracerProvider(resource=resource)
         processor = BatchSpanProcessor(
             OTLPSpanExporter(
-                endpoint="http://otel-collector:4318/v1/traces"
+                endpoint=('https://hot-diagnostics-alpha-activegate.'
+                          'dynatrace.svc.cluster.local/e/sro97894/api/v2/otlp/v1/traces'),
+                 headers = { '"Authorization": "Api-Token dt0c01.HNVLXC7GMBUVB3KS6M2YCNEM.'
+                            'O6EK76T7TXQJFCTQDZW42VHVR6E7VFBFJON3LXUAJLR3MMOLW4AT6KWMLUMZ7Z2G"'
+                    }
                 ))
         #my-svc.my-namespace.svc.cluster-domain.example
         provider.add_span_processor(processor)
