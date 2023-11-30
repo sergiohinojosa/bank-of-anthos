@@ -759,7 +759,7 @@ def create_app():
                 with open(name) as f:
                     data = json.load(f if name.startswith("/var") else open(f.read()))
                     # TODO Cargarlos al resource
-                    resource.update(data)
+                    resource.merge(data)
                     app.logger(resource)
 
             except FileNotFoundError as e:
