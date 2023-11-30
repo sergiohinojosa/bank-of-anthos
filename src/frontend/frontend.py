@@ -686,6 +686,9 @@ def create_app():
     app.config['CONSENT_COOKIE'] = 'consented'
     app.config['TIMESTAMP_FORMAT'] = '%Y-%m-%dT%H:%M:%S.%f%z'
     app.config['SCHEME'] = os.environ.get('SCHEME', 'http')
+    # TODO Add DT_TOKEN and DT_URL
+    # TODO Add Headers here with API Key
+
 
     # where am I?
     metadata_server = os.getenv('METADATA_SERVER', 'metadata.google.internal')
