@@ -44,7 +44,7 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExport
 
 
 # Trace imports
-from opentelemetry.propagators import set_global_textmap, W3CTraceContextTextMapPropagator
+from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from opentelemetry.instrumentation.jinja2 import Jinja2Instrumentor
@@ -761,7 +761,7 @@ def create_app():
 
         provider.add_span_processor(processor)
         trace.set_tracer_provider(provider)
-        set_global_textmap(W3CTraceContextTextMapPropagator())
+        set_global_textmap(TraceContextTextMapPropagator())
         # Add tracing auto-instrumentation for Flask, jinja and requests
         FlaskInstrumentor().instrument_app(app)
         RequestsInstrumentor().instrument()
