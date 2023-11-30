@@ -19,6 +19,7 @@ commonLabels:
   team: frontend
 resources:
   - frontend.yaml
+  - otel-collector-config.yaml
 components:
   - ../../../components/add-tmp-dir
   - ../../../components/add-public-key-volume

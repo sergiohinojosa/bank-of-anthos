@@ -85,6 +85,17 @@ spec:
               name: oauth-config
               key: DEMO_OAUTH_REDIRECT_URI
               optional: true
+        # Adding DT Tokens
+        - name: DT_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: dynatrace-secret
+              key: DT_API_TOKEN
+        - name: DT_API_URL
+          valueFrom:
+            secretKeyRef:
+              name: dynatrace-secret
+              key: DT_API_URL
         # Customize the metadata server hostname to query for metadata
         #- name: METADATA_SERVER
         #  value: "my-metadata-server"

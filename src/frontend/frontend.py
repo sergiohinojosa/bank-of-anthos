@@ -686,9 +686,10 @@ def create_app():
     app.config['CONSENT_COOKIE'] = 'consented'
     app.config['TIMESTAMP_FORMAT'] = '%Y-%m-%dT%H:%M:%S.%f%z'
     app.config['SCHEME'] = os.environ.get('SCHEME', 'http')
-    # TODO Add DT_TOKEN and DT_URL
-    # TODO Add Headers here with API Key
 
+    # DT Endpoints
+    app.config['DT_TOKEN'] = os.getenv('DT_API_TOKEN')
+    app.config['DT_URL'] = os.getenv('DT_API_URL')
 
     # where am I?
     metadata_server = os.getenv('METADATA_SERVER', 'metadata.google.internal')
@@ -732,9 +733,15 @@ def create_app():
     app.logger.setLevel(logging.getLogger('gunicorn.error').level)
     app.logger.info('Starting frontend service.')
 
+    # Retrieve DT_TOKEN and DT_URL from app.config
+    dt_token = app.config.get('DT_TOKEN')
+    dt_url = app.config.get('DT_URL')
+
     # Set up tracing and export spans to Dynatrace.
     if os.environ['ENABLE_TRACING'] == "true":
         app.logger.info("✅ Tracing enabled.")
+        # Log retrieved DT_TOKEN and DT_URL
+        app.logger.info(dt_url)
 
         #resource = Resource.create().attributes.setdefault.set(SERVICE_NAME, "frontend-service")
         # Service name is required for most backends
@@ -745,10 +752,8 @@ def create_app():
         provider = TracerProvider(resource=resource)
         processor = BatchSpanProcessor(
             OTLPSpanExporter(
-                endpoint=('https://hot-diagnostics-alpha-activegate.'
-                          'dynatrace.svc.cluster.local/e/sro97894/api/v2/otlp/v1/traces'),
-                 headers = { '"Authorization": "Api-Token dt0c01."'
-                    }
+                endpoint=dt_url,
+                headers={"Authorization": "Api-Token {}".format(dt_token)}
                 ))
         #my-svc.my-namespace.svc.cluster-domain.example
         provider.add_span_processor(processor)
