@@ -748,7 +748,7 @@ def create_app():
 
         #resource = Resource.create().attributes.setdefault.set(SERVICE_NAME, "frontend-service")
         # Service name is required for most backends
-        resource = Resource(Attributes={
+        resource = Resource(attributes={
             SERVICE_NAME: "frontend"
         })
 
