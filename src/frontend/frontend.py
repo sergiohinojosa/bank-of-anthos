@@ -42,10 +42,9 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExport
 #from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
 #from opentelemetry.exporter.otlp.proto.http._log_exporter import OTLPLogExporter
 
-from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 
 # Trace imports
-from opentelemetry.propagators.cloud_trace_propagator import CloudTraceFormatPropagator
+from opentelemetry.propagators import set_global_textmap, W3CTraceContextTextMapPropagator
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from opentelemetry.instrumentation.jinja2 import Jinja2Instrumentor
@@ -61,28 +60,6 @@ TRANSACTION_LIST_NAME = "transaction_list"
 
 # pylint: disable-msg=too-many-locals
 # pylint: disable-msg=too-many-branches
-# Initialize dictionary variable
-
-enrich_attrs = dict()
-
-
-# Iterate over the potential data files and try reading them
-
-for name in ["dt_metadata_e617c525669e072eebe3d0f08212e8f2.json", "/var/lib/dynatrace/enrichment/dt_metadata.json", "/var/lib/dynatrace/enrichment/dt_host_metadata.json"]:
-
-  try:
-
-    data = ''
-
-    with open(name) as f:
-
-      data = json.load(f if name.startswith("/var") else open(f.read()))
-
-      enrich_attrs.update(data)
-
-  except:
-
-    pass # An exception indicates the file was not available
 
 
 def create_app():
@@ -784,7 +761,7 @@ def create_app():
 
         provider.add_span_processor(processor)
         trace.set_tracer_provider(provider)
-        set_global_textmap(CloudTraceFormatPropagator())
+        set_global_textmap(W3CTraceContextTextMapPropagator())
         # Add tracing auto-instrumentation for Flask, jinja and requests
         FlaskInstrumentor().instrument_app(app)
         RequestsInstrumentor().instrument()
