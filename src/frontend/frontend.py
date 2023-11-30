@@ -729,7 +729,7 @@ def create_app():
     app.logger.setLevel(logging.getLogger('gunicorn.error').level)
     app.logger.info('Starting frontend service.')
 
-    # Set up tracing and export spans to Cloud Trace/OTel Collector.
+    # Set up tracing and export spans to Dynatrace.
     if os.environ['ENABLE_TRACING'] == "true":
         app.logger.info("✅ Tracing enabled.")
 
@@ -744,8 +744,7 @@ def create_app():
             OTLPSpanExporter(
                 endpoint=('https://hot-diagnostics-alpha-activegate.'
                           'dynatrace.svc.cluster.local/e/sro97894/api/v2/otlp/v1/traces'),
-                 headers = { '"Authorization": "Api-Token dt0c01.HNVLXC7GMBUVB3KS6M2YCNEM.'
-                            'O6EK76T7TXQJFCTQDZW42VHVR6E7VFBFJON3LXUAJLR3MMOLW4AT6KWMLUMZ7Z2G"'
+                 headers = { '"Authorization": "Api-Token dt0c01."'
                     }
                 ))
         #my-svc.my-namespace.svc.cluster-domain.example
