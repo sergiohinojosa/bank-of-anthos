@@ -748,7 +748,7 @@ def create_app():
 
         #resource = Resource.create().attributes.setdefault.set(SERVICE_NAME, "frontend-service")
         # Service name is required for most backends
-        resource = Resource(attributes={
+        resource = Resource(Attributes={
             SERVICE_NAME: "frontend"
         })
 
@@ -760,6 +760,7 @@ def create_app():
                     data = json.load(f if name.startswith("/var") else open(f.read()))
                     # TODO Cargarlos al resource
                     resource.merge(data)
+                    
                     app.logger(resource)
 
             except FileNotFoundError as e:
