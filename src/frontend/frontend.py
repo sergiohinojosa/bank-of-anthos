@@ -691,8 +691,8 @@ def create_app():
     app.config['SCHEME'] = os.environ.get('SCHEME', 'http')
 
     # DT Endpoints
+    app.config['DT_ENDPOINT'] = os.getenv('DT_ENDPOINT')
     app.config['DT_API_TOKEN'] = os.getenv('DT_API_TOKEN')
-    app.config['DT_ENDPOINT'] = os.getenv('DT_API_URL')
 
     # where am I?
     metadata_server = os.getenv('METADATA_SERVER', 'metadata.google.internal')
@@ -744,7 +744,7 @@ def create_app():
     if os.environ['ENABLE_TRACING'] == "true":
         app.logger.info("✅ Tracing enabled.")
         # Log retrieved DT_TOKEN and DT_URL
-        app.logger.info(dt_endpoint)
+        app.logger.info("Sending traces to %s", dt_endpoint)
 
         #resource = Resource.create().attributes.setdefault.set(SERVICE_NAME, "frontend-service")
         # Service name is required for most backends
