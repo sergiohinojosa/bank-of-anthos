@@ -35,8 +35,16 @@ from opentelemetry import trace
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.propagate import set_global_textmap
-from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
-from opentelemetry.propagators.cloud_trace_propagator import CloudTraceFormatPropagator
+from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+
+# Import exporters
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+#from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
+#from opentelemetry.exporter.otlp.proto.http._log_exporter import OTLPLogExporter
+
+
+# Trace imports
+from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from opentelemetry.instrumentation.jinja2 import Jinja2Instrumentor
@@ -52,6 +60,8 @@ TRANSACTION_LIST_NAME = "transaction_list"
 
 # pylint: disable-msg=too-many-locals
 # pylint: disable-msg=too-many-branches
+
+
 def create_app():
     """Flask application factory to create instances
     of the Frontend Flask App
@@ -680,6 +690,10 @@ def create_app():
     app.config['TIMESTAMP_FORMAT'] = '%Y-%m-%dT%H:%M:%S.%f%z'
     app.config['SCHEME'] = os.environ.get('SCHEME', 'http')
 
+    # DT Endpoints
+    app.config['DT_ENDPOINT'] = os.getenv('DT_ENDPOINT')
+    app.config['DT_API_TOKEN'] = os.getenv('DT_API_TOKEN')
+
     # where am I?
     metadata_server = os.getenv('METADATA_SERVER', 'metadata.google.internal')
     metadata_url = f'http://{metadata_server}/computeMetadata/v1/'
@@ -722,19 +736,37 @@ def create_app():
     app.logger.setLevel(logging.getLogger('gunicorn.error').level)
     app.logger.info('Starting frontend service.')
 
-    # Set up tracing and export spans to Cloud Trace.
+    # Retrieve DT_API_TOKEN and DT_ENDPOINT from app.config
+    dt_endpoint = app.config.get('DT_ENDPOINT')
+    dt_api_token = app.config.get('DT_API_TOKEN')
+
+    # Set up tracing and export spans to Dynatrace.
     if os.environ['ENABLE_TRACING'] == "true":
         app.logger.info("✅ Tracing enabled.")
-        trace.set_tracer_provider(TracerProvider())
-        cloud_trace_exporter = CloudTraceSpanExporter()
-        trace.get_tracer_provider().add_span_processor(
-            BatchSpanProcessor(cloud_trace_exporter)
-        )
-        set_global_textmap(CloudTraceFormatPropagator())
+        # Log retrieved DT_TOKEN and DT_URL
+        app.logger.info("Sending traces to %s", dt_endpoint)
+
+        #resource = Resource.create().attributes.setdefault.set(SERVICE_NAME, "frontend-service")
+        # Service name is required for most backends
+        resource = Resource(attributes={
+            SERVICE_NAME: "frontend"
+        })
+
+        provider = TracerProvider(resource=resource)
+        processor = BatchSpanProcessor(
+            OTLPSpanExporter(
+                endpoint=dt_endpoint,
+                headers={"Authorization": "Api-Token {}".format(dt_api_token)}
+                ))
+
+        provider.add_span_processor(processor)
+        trace.set_tracer_provider(provider)
+        set_global_textmap(TraceContextTextMapPropagator())
         # Add tracing auto-instrumentation for Flask, jinja and requests
         FlaskInstrumentor().instrument_app(app)
         RequestsInstrumentor().instrument()
         Jinja2Instrumentor().instrument()
+
     else:
         app.logger.info("🚫 Tracing disabled.")
 

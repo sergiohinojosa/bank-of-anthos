@@ -215,3 +215,6 @@ go/
 
 # Generated files
 **/gen/**
+
+# All tmp files/folders
+**tmp**
