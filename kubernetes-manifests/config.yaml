@@ -37,9 +37,17 @@ metadata:
   name: demo-data-config
 data:
   USE_DEMO_DATA: "True"
-  DEMO_LOGIN_USERNAME: "testuser"
+  DEMO_LOGIN_USERNAME: "devlove"
   # All demo user accounts are hardcoded to use the login password 'bankofanthos'
   DEMO_LOGIN_PASSWORD: "bankofanthos"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dynatrace-secret
+data:
+  DT_ENDPOINT: "https://tenantID.live.dynatrace.com/api/v2/otlp"
+  DT_API_TOKEN: "dt0c01.XXXX"
 ---
 apiVersion: v1
 kind: ServiceAccount

@@ -91,11 +91,11 @@ spec:
             secretKeyRef:
               name: dynatrace-secret
               key: DT_API_TOKEN
-        - name: DT_API_URL
+        - name: DT_ENDPOINT
           valueFrom:
             secretKeyRef:
               name: dynatrace-secret
-              key: DT_API_URL
+              key: DT_ENDPOINT
         # Customize the metadata server hostname to query for metadata
         #- name: METADATA_SERVER
         #  value: "my-metadata-server"

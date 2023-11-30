@@ -736,15 +736,15 @@ def create_app():
     app.logger.setLevel(logging.getLogger('gunicorn.error').level)
     app.logger.info('Starting frontend service.')
 
-    # Retrieve DT_TOKEN and DT_URL from app.config
-    dt_token = app.config.get('DT_API_TOKEN')
-    dt_url = app.config.get('DT_ENDPOINT')
+    # Retrieve DT_API_TOKEN and DT_ENDPOINT from app.config
+    dt_endpoint = app.config.get('DT_ENDPOINT')
+    dt_api_token = app.config.get('DT_API_TOKEN')
 
     # Set up tracing and export spans to Dynatrace.
     if os.environ['ENABLE_TRACING'] == "true":
         app.logger.info("✅ Tracing enabled.")
         # Log retrieved DT_TOKEN and DT_URL
-        app.logger.info(dt_url)
+        app.logger.info(dt_endpoint)
 
         #resource = Resource.create().attributes.setdefault.set(SERVICE_NAME, "frontend-service")
         # Service name is required for most backends
@@ -755,8 +755,8 @@ def create_app():
         provider = TracerProvider(resource=resource)
         processor = BatchSpanProcessor(
             OTLPSpanExporter(
-                endpoint=dt_url,
-                headers={"Authorization": "Api-Token {}".format(dt_token)}
+                endpoint=dt_endpoint,
+                headers={"Authorization": "Api-Token {}".format(dt_api_token)}
                 ))
 
         provider.add_span_processor(processor)
