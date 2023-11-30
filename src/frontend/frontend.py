@@ -760,6 +760,7 @@ def create_app():
                     data = json.load(f if name.startswith("/var") else open(f.read()))
                     # TODO Cargarlos al resource
                     resource.update(data)
+                    app.logger(resource)
 
             except FileNotFoundError as e:
                 print(f"FileNotFoundError: {e}. The file '{name}' was not found.")
