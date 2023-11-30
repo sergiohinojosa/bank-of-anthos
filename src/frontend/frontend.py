@@ -759,7 +759,7 @@ def create_app():
                 with open(name) as f:
                     data = json.load(f if name.startswith("/var") else open(f.read()))
                     # TODO Cargarlos al resource
-                    resource.merge(data)
+                    resource = resource.merge(Resource(attributes=data))
                     
                     app.logger(resource)
 
