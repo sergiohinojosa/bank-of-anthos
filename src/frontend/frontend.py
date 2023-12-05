@@ -752,6 +752,20 @@ def create_app():
             SERVICE_NAME: "frontend"
         })
 
+        # Iterate over the potential data files and try reading them
+        for name in ["/var/lib/dynatrace/enrichment/dt_metadata.json"]:
+            try:
+                data = ''
+                with open(name) as f:
+                    data = json.load(f if name.startswith("/var") else open(f.read()))
+                    # TODO Cargarlos al resource
+                    resource.update(data)
+                    
+            except:
+                pass # An exception indicates the file was not available
+
+        # Use enrich_attrs here to enrich your requests to Dynatrace.
+        # For example, when instrumenting with OpenTelemetry, add the data as resource attributes.
         provider = TracerProvider(resource=resource)
         processor = BatchSpanProcessor(
             OTLPSpanExporter(
