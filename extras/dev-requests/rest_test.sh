@@ -1,51 +1,57 @@
+
 #!/bin/bash
 
-easytravel_dns="18-133-122-1.nip.io"
+bankofAnthosURL="development-banking.34-118-0-68.sslip.io"
 developer_name=""
+developer_pass=""
 
 get_signin_body() {
-    cat <<EOF
-{
-    "firstName": "$developer_name",
-    "lastName": "$developer_name LastName",
-    "email": "$developer_name",
-    "password": "$developer_name",
-    "state": "Bavaria",
-    "city": "Munich",
-    "street": "Beer Street 10",
-    "door": "1",
-    "phone": "+49123456789"
-}
+cat <<EOF
+username=$developer_name&\
+password=$developer_pass&\
+password-repeat=$developer_pass&\
+firstname=$developer_name&\
+lastname=$developer_name&\
+address=123+Nth+Avenue%2C+New+York+City&\
+country=United+States&\
+state=NY&\
+zip=10004&\
+ssn=111-22-3333&\
+birthday=2023-12-07&\
+timezone=-5
 EOF
 }
 
 get_login_body() {
-    cat <<EOF
-{
-    "username": "$developer_name",
-    "password": "$developer_name"
-}
+cat <<EOF
+username=$developer_name&\
+password=$developer_pass
 EOF
 }
 
 do_signin() {
-    curl -v POST "http://$easytravel_dns/easytravel/rest/signin" \
+    result=$(curl -X POST "http://$bankofAnthosURL/signup" \
         -H "accept: application/json" \
         -H "x-developer: $developer_name" \
-        -H "Content-Type: application/json" \
+        -H "Content-Type: application/x-www-form-urlencoded" \
         -d "$(get_signin_body)"
+        )
+        echo "$result";
+
 }
 
 do_login() {
-    curl -v POST "http://$easytravel_dns/easytravel/rest/login" \
+    result=$(curl -X POST "http://$bankofAnthosURL/login" \
         -H "accept: application/json" \
         -H "x-developer: $developer_name" \
-        -H "Content-Type: application/json" \
+        -H "Content-Type: application/x-www-form-urlencoded" \
         -d "$(get_login_body)"
+        )
+
 }
 
 print_usage() {
-    echo "Usage: bash rest_test.sh [test_function] [developer_name]    "
+    echo "Usage: bash rest_test.sh [test_function] [developer_name] [developer_pass]    "
     echo "                                                                "
     echo "test_function                                                   "
     echo "   signin                          creates the given account    "
@@ -58,10 +64,11 @@ echo "================================================================"
 echo "EasyTravel REST Developer Tester                                "
 echo "================================================================"
 
-if [[ $# -eq 2 ]]; then
+if [[ $# -eq 3 ]]; then
 
     test_function=$1
     developer_name=$2
+    developer_pass=$3
 
     case $test_function in
     signin)
@@ -88,7 +95,7 @@ if [[ $# -eq 2 ]]; then
 else
     echo ""
     echo "----------------------------------------------"
-    echo "You need to pass exactly 2 parameters                          "
+    echo "You need to pass exactly 3 parameters                          "
     echo ""
     print_usage
 
