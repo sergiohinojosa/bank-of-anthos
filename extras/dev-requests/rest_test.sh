@@ -30,7 +30,7 @@ EOF
 }
 
 do_signin() {
-    result=$(curl -X POST "http://$bankofAnthosURL/signup" \
+    result=$(curl -v -X POST "http://$bankofAnthosURL/signup" \
         -H "accept: application/json" \
         -H "x-developer: $developer_name" \
         -H "Content-Type: application/x-www-form-urlencoded" \
@@ -41,7 +41,7 @@ do_signin() {
 }
 
 do_login() {
-    result=$(curl -X POST "http://$bankofAnthosURL/login" \
+    result=$(curl -v -X POST "http://$bankofAnthosURL/login" \
         -H "accept: application/json" \
         -H "x-developer: $developer_name" \
         -H "Content-Type: application/x-www-form-urlencoded" \

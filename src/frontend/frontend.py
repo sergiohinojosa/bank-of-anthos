@@ -39,9 +39,6 @@ from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 
 # Import exporters
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
-#from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
-#from opentelemetry.exporter.otlp.proto.http._log_exporter import OTLPLogExporter
-
 
 # Trace imports
 from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
@@ -742,12 +739,10 @@ def create_app():
 
     # Set up tracing and export spans to Dynatrace.
     if os.environ['ENABLE_TRACING'] == "true":
+
         app.logger.info("✅ Tracing enabled.")
-        # Log retrieved DT_TOKEN and DT_URL
         app.logger.info("Sending traces to %s", dt_endpoint)
 
-        #resource = Resource.create().attributes.setdefault.set(SERVICE_NAME, "frontend-service")
-        # Service name is required for most backends
         resource = Resource(attributes={
             SERVICE_NAME: "frontend"
         })
