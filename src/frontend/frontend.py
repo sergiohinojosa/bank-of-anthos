@@ -754,10 +754,13 @@ def create_app():
                 with open(name) as f:
                     data = json.load(f if name.startswith("/var") else open(f.read()))
                     # TODO Cargarlos al resource
-                    resource.update(data)
-                    
-            except:
-                pass # An exception indicates the file was not available
+                    resource = resource.merge(Resource(attributes=data))
+                    app.logger.info(resource)
+            except FileNotFoundError as e:
+                print(f"FileNotFoundError: {e}. The file '{name}' was not found.")
+            except json.JSONDecodeError as e:
+                print(f"JSONDecodeError: {e}. Unable to decode JSON from the file '{name}'.")
+
 
         # Use enrich_attrs here to enrich your requests to Dynatrace.
         # For example, when instrumenting with OpenTelemetry, add the data as resource attributes.
