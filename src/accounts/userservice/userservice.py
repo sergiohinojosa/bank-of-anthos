@@ -260,7 +260,6 @@ def create_app():
                 print(f"FileNotFoundError: {e}. The file '{name}' was not found.")
             except json.JSONDecodeError as e:
                 print(f"JSONDecodeError: {e}. Unable to decode JSON from the file '{name}'.")
-                
         # Use enrich_attrs here to enrich your requests to Dynatrace.
         # For example, when instrumenting with OpenTelemetry, add the data as resource attributes.
         provider = TracerProvider(resource=resource)
