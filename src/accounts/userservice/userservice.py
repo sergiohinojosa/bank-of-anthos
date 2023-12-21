@@ -231,7 +231,7 @@ def create_app():
     app.logger.info('Starting userservice.')
 
     # Retrieve DT_API_TOKEN and DT_ENDPOINT from app.config
-    dt_endpoint = app.config.get('DT_ENDPOINT') 
+    dt_endpoint = app.config.get('DT_ENDPOINT')
     dt_api_token = app.config.get('DT_API_TOKEN')
 
     # DT Endpoints
@@ -240,8 +240,6 @@ def create_app():
 
     # Set up tracing and export spans to Dynatrace.
     if os.environ['ENABLE_TRACING'] == "true":
-
-        
         app.logger.info("✅ Tracing enabled.")
         app.logger.info("Sending traces to %s", dt_endpoint)
 
@@ -257,7 +255,6 @@ def create_app():
                     data = json.load(f if name.startswith("/var") else open(f.read()))
                     # TODO Cargarlos al resource
                     resource.update(data)
-                    
             except:
                 pass # An exception indicates the file was not available
 
