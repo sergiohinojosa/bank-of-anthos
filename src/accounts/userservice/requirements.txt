@@ -121,6 +121,7 @@ opentelemetry-instrumentation==0.41b0
 opentelemetry-instrumentation-requests==0.41b0
     #   opentelemetry-instrumentation-wsgi
 opentelemetry-instrumentation-flask==0.41b0
+opentelemetry-instrumentation-jinja2==0.41b0
     # via -r requirements.in
 opentelemetry-instrumentation-sqlalchemy==0.41b0
     # via -r requirements.in
