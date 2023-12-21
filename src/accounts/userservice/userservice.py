@@ -255,8 +255,9 @@ def create_app():
                     data = json.load(f if name.startswith("/var") else open(f.read()))
                     # TODO Cargarlos al resource
                     resource.update(data)
-            except:
-                pass # An exception indicates the file was not available
+            except TypeError as e:
+                # handle any other exception
+                print("Error '{0}' occured. Arguments {1}.".format(e.message, e.args))
 
         # Use enrich_attrs here to enrich your requests to Dynatrace.
         # For example, when instrumenting with OpenTelemetry, add the data as resource attributes.
