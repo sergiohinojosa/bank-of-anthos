@@ -230,13 +230,13 @@ def create_app():
     app.logger.setLevel(logging.getLogger('gunicorn.error').level)
     app.logger.info('Starting userservice.')
 
-    # Retrieve DT_API_TOKEN and DT_ENDPOINT from app.config
-    dt_endpoint = app.config.get('DT_ENDPOINT')
-    dt_api_token = app.config.get('DT_API_TOKEN')
-
     # DT Endpoints
     app.config['DT_ENDPOINT'] = os.getenv('DT_ENDPOINT')
     app.config['DT_API_TOKEN'] = os.getenv('DT_API_TOKEN')
+
+    # Retrieve DT_API_TOKEN and DT_ENDPOINT from app.config
+    dt_endpoint = app.config.get('DT_ENDPOINT')
+    dt_api_token = app.config.get('DT_API_TOKEN')
 
     # Set up tracing and export spans to Dynatrace.
     if os.environ['ENABLE_TRACING'] == "true":
