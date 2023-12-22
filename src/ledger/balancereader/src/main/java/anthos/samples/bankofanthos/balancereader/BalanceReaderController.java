@@ -45,8 +45,8 @@ public final class BalanceReaderController {
     private static final Logger LOGGER =
         LogManager.getLogger(BalanceReaderController.class);
 
-    public static final int MIN_THRESHOLD = 5;
-    public static final int MAX_THRESHOLD = 30;
+    public static final int MIN_THRESHOLD = 20;
+    public static final int MAX_THRESHOLD = 50;
 
     @Autowired
     private TransactionRepository dbRepo;
@@ -187,7 +187,7 @@ public final class BalanceReaderController {
      * @param cache
      * @return
      */
-    private int getCacheComputingThreshold(LoadingCache<String, Long> cache) {
+    public int getCacheComputingThreshold(LoadingCache<String, Long> cache) {
 
         // TODO parameterize with env variables
         int cacheSize = (int) cache.size();
@@ -204,7 +204,7 @@ public final class BalanceReaderController {
      * @param n
      * @return
      */
-    public static int computeCache(int n) {
+    public int computeCache(int n) {
         if (n == 0) {
             return 0;
         }
