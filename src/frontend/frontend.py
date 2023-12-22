@@ -764,6 +764,7 @@ def create_app():
 
         # Use enrich_attrs here to enrich your requests to Dynatrace.
         # For example, when instrumenting with OpenTelemetry, add the data as resource attributes.
+
         provider = TracerProvider(resource=resource)
         processor = BatchSpanProcessor(
             OTLPSpanExporter(
