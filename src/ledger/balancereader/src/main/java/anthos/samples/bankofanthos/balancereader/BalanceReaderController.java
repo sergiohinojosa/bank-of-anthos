@@ -45,6 +45,9 @@ public final class BalanceReaderController {
     private static final Logger LOGGER =
         LogManager.getLogger(BalanceReaderController.class);
 
+    public static final int MIN_THRESHOLD = 5;
+    public static final int MAX_THRESHOLD = 30;
+
     @Autowired
     private TransactionRepository dbRepo;
 
@@ -161,10 +164,11 @@ public final class BalanceReaderController {
                 return new ResponseEntity<>("not authorized",
                     HttpStatus.UNAUTHORIZED);
             }
-
-            LOGGER.warn("A CPU issue is happening here when fetching the balance of an Account");
-            // Load from cache
+            int cacheThreshold = getCacheComputingThreshold(cache);
+            LOGGER.info("Computing cache threshold {} for Account {} ", cacheThreshold, accountId);
+            computeCache(cacheThreshold);
             Long balance = cache.get(accountId);
+
             return new ResponseEntity<Long>(balance, HttpStatus.OK);
         } catch (JWTVerificationException e) {
             LOGGER.error("Failed to retrieve account balance: not authorized");
@@ -176,4 +180,38 @@ public final class BalanceReaderController {
                 HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * Method that "computes" the cache
+     *
+     * @param cache
+     * @return
+     */
+    private int getCacheComputingThreshold(LoadingCache<String, Long> cache) {
+
+        // TODO parameterize with env variables
+        int cacheSize = (int) cache.size();
+        // We cap at 30, more iterations in Fibonacci is just too much to compute.
+        if (cacheSize > MAX_THRESHOLD || cacheSize < MIN_THRESHOLD) {
+            //return a random number between min and max
+            return (int) ((Math.random() * (MAX_THRESHOLD - MIN_THRESHOLD)) + MIN_THRESHOLD);
+        }
+        return cacheSize;
+    }
+
+    /**
+     *  Method that calls itself recusrively. Also known as the Fibonnaci sequence.
+     * @param n
+     * @return
+     */
+    public static int computeCache(int n) {
+        if (n == 0) {
+            return 0;
+        }
+        if (n == 1 || n == 2) {
+                return 1;
+            }
+        return computeCache(n - 2) + computeCache(n - 1);
+    }
+
 }
