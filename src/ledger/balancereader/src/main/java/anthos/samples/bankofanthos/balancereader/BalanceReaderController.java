@@ -45,8 +45,10 @@ public final class BalanceReaderController {
     private static final Logger LOGGER =
         LogManager.getLogger(BalanceReaderController.class);
 
-    public static final int MIN_THRESHOLD = 20;
-    public static final int MAX_THRESHOLD = 50;
+    public static final int MIN_THRESHOLD = 1000;
+    public static final int MAX_THRESHOLD = 5000;
+    public static final long NANOSECONDS = 1000000L;
+
 
     @Autowired
     private TransactionRepository dbRepo;
@@ -204,14 +206,12 @@ public final class BalanceReaderController {
      * @param n
      * @return
      */
-    public int computeCache(int n) {
-        if (n == 0) {
-            return 0;
+    public void computeCache(int milliseconds) {
+        long sleepTime = milliseconds * NANOSECONDS; // convert to nanoseconds
+        long startTime = System.nanoTime();
+    while ((System.nanoTime() - startTime) < sleepTime) {
+        // do nothing, continue due chechstyle
+        continue;
         }
-        if (n == 1 || n == 2) {
-                return 1;
-            }
-        return computeCache(n - 2) + computeCache(n - 1);
     }
-
 }
