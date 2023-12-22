@@ -13,7 +13,7 @@
           </elementProp>
           <elementProp name="SERVER_URL" elementType="Argument">
             <stringProp name="Argument.name">SERVER_URL</stringProp>
-            <stringProp name="Argument.value">${__P(SERVER_URL,staging-banking.34-31-145-171.sslip.io)}</stringProp>
+            <stringProp name="Argument.value">${__P(SERVER_URL,development-banking.34-118-0-68.sslip.io)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="VUCount" elementType="Argument">
@@ -287,7 +287,7 @@ print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
               <elementProp name="uuid" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">uuid</stringProp>
-                <stringProp name="Argument.value">e91d9475-77db-4de0-a427-b54d60193af8</stringProp>
+                <stringProp name="Argument.value">${uuid}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -431,72 +431,84 @@ print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
                 <stringProp name="Argument.name">username</stringProp>
                 <stringProp name="Argument.value">123456</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="password" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">password</stringProp>
                 <stringProp name="Argument.value">bankofanthos</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="password-repeat" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">password-repeat</stringProp>
                 <stringProp name="Argument.value">bankofanthos</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="firstname" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">firstname</stringProp>
                 <stringProp name="Argument.value">sergio</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="lastname" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">lastname</stringProp>
                 <stringProp name="Argument.value">hinojosa</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="address" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">address</stringProp>
                 <stringProp name="Argument.value">123 Nth Avenue, New York City</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="country" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">country</stringProp>
                 <stringProp name="Argument.value">United States</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="state" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">state</stringProp>
                 <stringProp name="Argument.value">NY</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="zip" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">zip</stringProp>
                 <stringProp name="Argument.value">10004</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="ssn" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">ssn</stringProp>
                 <stringProp name="Argument.value">111-22-3333</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="birthday" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">birthday</stringProp>
                 <stringProp name="Argument.value">1984-03-26</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
               <elementProp name="timezone" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">timezone</stringProp>
                 <stringProp name="Argument.value">-5</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -525,6 +537,19 @@ print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
         </DebugSampler>
         <hashTree/>
         <RecordingController guiclass="RecordController" testclass="RecordingController" testname="Recording Controller" enabled="false"/>
+        <hashTree/>
+        <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="Transaction UUID" enabled="true">
+          <collectionProp name="UserParameters.names">
+            <stringProp name="3601339">uuid</stringProp>
+          </collectionProp>
+          <collectionProp name="UserParameters.thread_values">
+            <collectionProp name="681405977">
+              <stringProp name="118040362">${__UUID()}</stringProp>
+            </collectionProp>
+          </collectionProp>
+          <boolProp name="UserParameters.per_iteration">true</boolProp>
+          <stringProp name="TestPlan.comments">PreProcessor</stringProp>
+        </UserParameters>
         <hashTree/>
       </hashTree>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -676,9 +701,9 @@ print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
           <stringProp name="1739087931">http?://self-repair\.mozilla\.org.*</stringProp>
           <stringProp name="1206954446">tiles.*\.mozilla\.com.*</stringProp>
           <stringProp name="-1424663473">.*detectportal\.firefox\.com.*</stringProp>
+          <stringProp name="1779943373">us\.update\.toolbar\.yahoo\.com.*</stringProp>
           <stringProp name="-190610036">.*\.google\.com.*/safebrowsing/.*</stringProp>
           <stringProp name="-1899150273">api\.bing\.com.*</stringProp>
-          <stringProp name="1779943373">us\.update\.toolbar\.yahoo\.com.*</stringProp>
           <stringProp name="-958112859">toolbar\.google\.com.*</stringProp>
           <stringProp name="-192420923">.*yimg\.com.*</stringProp>
           <stringProp name="-576820688">toolbar\.msn\.com.*</stringProp>
@@ -690,8 +715,8 @@ print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
           <stringProp name="-1314416226">sqm\.microsoft\.com.*</stringProp>
           <stringProp name="587935979">g\.msn.*</stringProp>
           <stringProp name="1629558731">clients.*\.google.*</stringProp>
-          <stringProp name="1726898318">geo\.yahoo\.com.*</stringProp>
           <stringProp name="11072252">.*toolbar\.yahoo\.com.*</stringProp>
+          <stringProp name="1726898318">geo\.yahoo\.com.*</stringProp>
         </collectionProp>
         <collectionProp name="ProxyControlGui.include_list"/>
         <boolProp name="ProxyControlGui.capture_http_headers">true</boolProp>
