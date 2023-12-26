@@ -37,7 +37,7 @@ metadata:
   name: demo-data-config
 data:
   USE_DEMO_DATA: "True"
-  DEMO_LOGIN_USERNAME: "testuser"
+  DEMO_LOGIN_USERNAME: "devlove"
   # All demo user accounts are hardcoded to use the login password 'bankofanthos'
   DEMO_LOGIN_PASSWORD: "bankofanthos"
 ---

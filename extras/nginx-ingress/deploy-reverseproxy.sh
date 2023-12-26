@@ -6,7 +6,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 
 # Instrument NGINX for adding RUM to all ingresses (we use Classic Deployment)
 # https://docs.dynatrace.com/docs/setup-and-configuration/setup-on-k8s/guides/instrument-ingress-nginx
-kubectl apply -f ingress-cm-load-oneagent.yaml
+kubectl apply -f ingress-cm-load-cloudnative.yaml
 
 # Read the domain from CM or variable DOMAIN (use export DOMAIN) like
 #  export DOMAIN=2-2-2-2-sslip.io
