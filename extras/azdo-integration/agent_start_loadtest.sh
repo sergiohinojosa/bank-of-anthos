@@ -1,5 +1,6 @@
 #!/bin/bash
 start_performance_test() {
+    env
     cd $(System.ArtifactsDirectory)/$(Release.PrimaryArtifactSourceAlias)/extras/jmeter
     #cd ../extras/jmeter
     #SERVER_URL=$(kubectl get service frontend -n $(staging_namespace) | awk '{print $4}')
