@@ -33,6 +33,8 @@ rolloutDeployments() {
         # Bumping up deployment
         kubectl -n $NAMESPACE set image deployment/$deployment $container=$REPOSITORY/$deployment:$VERSION
     done
+    echo "waiting for all deployments to be ready"
+    kubectl wait --for=condition=available --timeout=300s --all deployments --namespace $(staging_namespace)  || true
 }
 
 getNodes() {
