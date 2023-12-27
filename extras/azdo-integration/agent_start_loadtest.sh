@@ -1,7 +1,7 @@
 #!/bin/bash
 start_performance_test() {
-    #cd $(System.ArtifactsDirectory)/$(Release.PrimaryArtifactSourceAlias)/extras/jmeter
-    cd ../extras/jmeter
+    cd $(System.ArtifactsDirectory)/$(Release.PrimaryArtifactSourceAlias)/extras/jmeter
+    #cd ../extras/jmeter
     #SERVER_URL=$(kubectl get service frontend -n $(staging_namespace) | awk '{print $4}')
     echo "Pointing to $SERVER_URL with VirtualUsers $VU and Loops $LOOPS"
     # using default for now
