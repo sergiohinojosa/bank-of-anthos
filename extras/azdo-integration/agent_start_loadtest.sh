@@ -10,16 +10,6 @@ start_performance_test() {
     /opt/jmeter/apache-jmeter-5.5/bin/jmeter -SERVER_URL=$SERVER_URL -JVUCount=$VU -JLoopCount=$LOOPS -n -t $JMX_FILE -l testreport.jtl
 }
 
-echo "ENVIRONMENT VARIABLES"
-env
-echo "WHERE AM I"
-pwd
-echo "WHO AM I"
-whoami
-
-echo "STARTING LOADTEST"
-
-
 start_timestamp=$(date '+%F %H:%M:00')
 echo $start_timestamp
 echo "##vso[task.setvariable variable=start_timestamp]$start_timestamp"
