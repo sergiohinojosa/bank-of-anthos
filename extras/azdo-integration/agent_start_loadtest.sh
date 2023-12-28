@@ -1,14 +1,14 @@
 #!/bin/bash
+
+JMX_FILE=$AGENT_RELEASEDIRECTORY/$RELEASE_PRIMARYARTIFACTSOURCEALIAS/extras/jmeter/Test_Banking_Process.jmx
+
 start_performance_test() {
 
-    cd $(System.ArtifactsDirectory)/$(Release.PrimaryArtifactSourceAlias)/extras/jmeter
-    #cd ../extras/jmeter
-    #SERVER_URL=$(kubectl get service frontend -n $(staging_namespace) | awk '{print $4}')
     echo "Pointing to $SERVER_URL with VirtualUsers $VU and Loops $LOOPS"
+    echo "Loading Loadtest $JMX_FILE"
     
     # using default for now
-    # TODO Make jmeter in PATH available for all users.
-    /home/daniel_braaf/jmeter/apache-jmeter-5.5/bin/jmeter -SERVER_URL=$(SERVER_URL) -JVUCount=$(VU) -JLoopCount=$(LOOPS) -n -t Test_Banking_Process.jmx -l testreport.jtl
+    jmeter -SERVER_URL=$SERVER_URL -JVUCount=$VU -JLoopCount=$LOOPS -n -t $JMX_FILE -l testreport.jtl
 }
 
 echo "ENVIRONMENT VARIABLES"
