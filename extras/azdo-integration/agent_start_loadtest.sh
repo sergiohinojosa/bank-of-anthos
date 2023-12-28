@@ -7,8 +7,7 @@ start_performance_test() {
     echo "Pointing to $SERVER_URL with VirtualUsers $VU and Loops $LOOPS"
     echo "Loading Loadtest $JMX_FILE"
     
-    # using default for now
-    jmeter -SERVER_URL=$SERVER_URL -JVUCount=$VU -JLoopCount=$LOOPS -n -t $JMX_FILE -l testreport.jtl
+    /opt/jmeter/apache-jmeter-5.5/bin/jmeter -SERVER_URL=$SERVER_URL -JVUCount=$VU -JLoopCount=$LOOPS -n -t $JMX_FILE -l testreport.jtl
 }
 
 echo "ENVIRONMENT VARIABLES"
