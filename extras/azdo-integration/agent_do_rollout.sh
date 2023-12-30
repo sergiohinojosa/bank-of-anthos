@@ -16,6 +16,32 @@ setDefaultValues() {
     fi
 }
 
+calculateVersion() {
+    #Date in 12 Hour format (01-12)
+    h=$(date +"%I")
+    echo "The hour is $h"
+    case $h in
+    "12" | "06")
+        VERSION="1.0.0"
+        ;;
+    "01" | "07")
+        VERSION="1.0.1"
+        ;;
+    "02" | "08")
+        VERSION="1.0.0"
+        ;;
+    "03" | "09")
+        VERSION="1.0.1"
+        ;;
+    "04" | "10")
+        VERSION="1.0.0"
+        ;;
+    "05" | "11")
+        VERSION="1.0.1"
+        ;;
+    esac
+}
+
 printDeployments() {
     kubectl get deployments -n $NAMESPACE -o wide
 }
@@ -34,7 +60,7 @@ rolloutDeployments() {
         kubectl -n $NAMESPACE set image deployment/$deployment $container=$REPOSITORY/$deployment:$VERSION
     done
     echo "waiting for all deployments to be ready"
-    kubectl wait --for=condition=available --timeout=300s --all deployments --namespace $NAMESPACE  || true
+    kubectl wait --for=condition=available --timeout=300s --all deployments --namespace $NAMESPACE || true
 }
 
 getNodes() {
@@ -54,16 +80,18 @@ usage() {
     echo "Usage: bash rollout.sh [-n namespace] [-v version]              "
     echo "                                                                "
     echo "     -n      Namespace. Default '$NAMESPACE'                    "
-    echo "     -v      Version. Default '$VERSION'                        "
+    echo "     -v      Version. Calculated '$VERSION'                     "
     echo "================================================================"
 }
 
-
+calculateVersion
 # Read Flags
 while getopts n:v:h: flag; do
     case "${flag}" in
     n) NAMESPACE=${OPTARG} ;;
-    v) VERSION=${OPTARG} ;;
+    v)  # overwrite version from pipeline
+        VERSION=${OPTARG}
+        ;;
     h)
         usage
         exit 0
@@ -74,6 +102,7 @@ while getopts n:v:h: flag; do
         ;;
     esac
 done
+
 
 # call functions after variables set
 rolloutDeployments

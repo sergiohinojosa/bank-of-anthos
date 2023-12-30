@@ -13,12 +13,12 @@
           </elementProp>
           <elementProp name="SERVER_URL" elementType="Argument">
             <stringProp name="Argument.name">SERVER_URL</stringProp>
-            <stringProp name="Argument.value">${__P(SERVER_URL,staging-banking.34-31-145-171.sslip.io)}</stringProp>
+            <stringProp name="Argument.value">${__P(SERVER_URL,development-banking.34-31-145-171.sslip.io)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="VUCount" elementType="Argument">
             <stringProp name="Argument.name">VUCount</stringProp>
-            <stringProp name="Argument.value">${__P(VUCount,10)}</stringProp>
+            <stringProp name="Argument.value">${__P(VUCount,1)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="LoopCount" elementType="Argument">
@@ -222,7 +222,7 @@ print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
               <elementProp name="username" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">username</stringProp>
-                <stringProp name="Argument.value">alice</stringProp>
+                <stringProp name="Argument.value">jmeter</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -252,28 +252,34 @@ print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
           <intProp name="HTTPSampler.ipSourceType">0</intProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="3 - send payment" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="3 - deposit funds" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="account_num" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">account_num</stringProp>
-                <stringProp name="Argument.value">1055757655</stringProp>
+              <elementProp name="account" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.name">account</stringProp>
+                <stringProp name="Argument.value">{&quot;account_num&quot;: &quot;8888888888&quot;, &quot;routing_num&quot;: &quot;987654321&quot; }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
-              <elementProp name="contact_account_num" elementType="HTTPArgument">
+              <elementProp name="external_account_num" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">contact_account_num</stringProp>
+                <stringProp name="Argument.name">external_account_num</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+              </elementProp>
+              <elementProp name="external_routing_num" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.name">external_routing_num</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
-              <elementProp name="contact_label" elementType="HTTPArgument">
+              <elementProp name="external_label" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">contact_label</stringProp>
-                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.name">external_label</stringProp>
+                <stringProp name="Argument.value">JMeter Fonding</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -296,7 +302,7 @@ print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
           <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
           <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-          <stringProp name="HTTPSampler.path">/payment</stringProp>
+          <stringProp name="HTTPSampler.path">/deposit</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -311,35 +317,28 @@ print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
           <stringProp name="TestPlan.comments">Detected the start of a redirect chain</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="4 - deposit funds" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="4 - send payment" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="account" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.name">account</stringProp>
-                <stringProp name="Argument.value">{&quot;account_num&quot;: &quot;9099791699&quot;, &quot;routing_num&quot;: &quot;808889588&quot; }</stringProp>
+              <elementProp name="account_num" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.name">account_num</stringProp>
+                <stringProp name="Argument.value">9999999999</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
-              <elementProp name="external_account_num" elementType="HTTPArgument">
+              <elementProp name="contact_account_num" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">external_account_num</stringProp>
-                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.name">contact_account_num</stringProp>
+                <stringProp name="Argument.value">9999999999</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
-              <elementProp name="external_routing_num" elementType="HTTPArgument">
+              <elementProp name="contact_label" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">external_routing_num</stringProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-              </elementProp>
-              <elementProp name="external_label" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.name">external_label</stringProp>
-                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.name">contact_label</stringProp>
+                <stringProp name="Argument.value">Richman</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -353,7 +352,7 @@ print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
               <elementProp name="uuid" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.name">uuid</stringProp>
-                <stringProp name="Argument.value">8976a19c-5a5d-4436-b375-354bcfef39cf</stringProp>
+                <stringProp name="Argument.value">${uuid2}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -362,7 +361,7 @@ print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
           <stringProp name="HTTPSampler.domain">${SERVER_URL}</stringProp>
           <stringProp name="HTTPSampler.protocol">${scheme}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-          <stringProp name="HTTPSampler.path">/deposit</stringProp>
+          <stringProp name="HTTPSampler.path">/payment</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -541,10 +540,14 @@ print(&quot;sessionId: &quot; + vars.get(&quot;sessionId&quot;));</stringProp>
         <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="Transaction UUID" enabled="true">
           <collectionProp name="UserParameters.names">
             <stringProp name="3601339">uuid</stringProp>
+            <stringProp name="111641559">uuid2</stringProp>
+            <stringProp name="0"></stringProp>
           </collectionProp>
           <collectionProp name="UserParameters.thread_values">
-            <collectionProp name="681405977">
+            <collectionProp name="1644887800">
               <stringProp name="118040362">${__UUID()}</stringProp>
+              <stringProp name="118040362">${__UUID()}</stringProp>
+              <stringProp name="0"></stringProp>
             </collectionProp>
           </collectionProp>
           <boolProp name="UserParameters.per_iteration">true</boolProp>
