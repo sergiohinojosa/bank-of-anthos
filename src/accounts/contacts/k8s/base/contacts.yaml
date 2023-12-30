@@ -53,6 +53,17 @@ spec:
         # If no valid level is set, will default to info.
         - name: LOG_LEVEL
           value: "info"
+        # Adding DT Tokens
+        - name: DT_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: dynatrace-secret
+              key: DT_API_TOKEN
+        - name: DT_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: dynatrace-secret
+              key: DT_ENDPOINT
         envFrom:
         - configMapRef:
             name: environment-config

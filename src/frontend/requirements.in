@@ -7,6 +7,9 @@ gunicorn==21.2.0
 google-auth==2.23.3
 opentelemetry-sdk==1.20.0
 opentelemetry-exporter-gcp-trace==1.5.0
+opentelemetry-exporter-otl==1.21.0
+opentelemetry-exporter-otlp-proto-grpc==1.21.0
+opentelemetry-exporter-otlp-proto-http==1.21.0
 opentelemetry-propagator-gcp==1.5.0
 opentelemetry-instrumentation-flask==0.41b0
 opentelemetry-instrumentation-jinja2==0.41b0

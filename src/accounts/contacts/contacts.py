@@ -19,6 +19,7 @@ Manages internal user contacts and external accounts.
 
 import atexit
 import logging
+import json
 import os
 import re
 import sys
@@ -32,9 +33,16 @@ from opentelemetry import trace
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.propagate import set_global_textmap
-from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
-from opentelemetry.propagators.cloud_trace_propagator import CloudTraceFormatPropagator
+from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+
+# Import exporters
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+
+# Trace imports
+from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+from opentelemetry.instrumentation.jinja2 import Jinja2Instrumentor
 
 from db import ContactsDb
 
@@ -196,17 +204,53 @@ def create_app():
     app.logger.setLevel(logging.getLogger("gunicorn.error").level)
     app.logger.info("Starting contacts service.")
 
-    # Set up tracing and export spans to Cloud Trace.
+        # DT Endpoints
+    app.config['DT_ENDPOINT'] = os.getenv('DT_ENDPOINT')
+    app.config['DT_API_TOKEN'] = os.getenv('DT_API_TOKEN')
+
+    # Retrieve DT_API_TOKEN and DT_ENDPOINT from app.config
+    dt_endpoint = app.config.get('DT_ENDPOINT')
+    dt_api_token = app.config.get('DT_API_TOKEN')
+
+    # Set up tracing and export spans to Dynatrace.
     if os.environ['ENABLE_TRACING'] == "true":
         app.logger.info("✅ Tracing enabled.")
-        # Set up tracing and export spans to Cloud Trace
-        trace.set_tracer_provider(TracerProvider())
-        cloud_trace_exporter = CloudTraceSpanExporter()
-        trace.get_tracer_provider().add_span_processor(
-            BatchSpanProcessor(cloud_trace_exporter)
-        )
-        set_global_textmap(CloudTraceFormatPropagator())
+        app.logger.info("Sending traces to %s", dt_endpoint)
+
+        resource = Resource(attributes={
+            SERVICE_NAME: "Contacts"
+        })
+
+        # Iterate over the potential data files and try reading them
+        for name in ["/var/lib/dynatrace/enrichment/dt_metadata.json"]:
+            try:
+                data = ''
+                with open(name) as f:
+                    data = json.load(f if name.startswith("/var") else open(f.read()))
+                    # TODO Cargarlos al resource
+                    resource = resource.merge(Resource(attributes=data))
+                    app.logger.info(resource)
+            except FileNotFoundError as e:
+                print(f"FileNotFoundError: {e}. The file '{name}' was not found.")
+            except json.JSONDecodeError as e:
+                print(f"JSONDecodeError: {e}. Unable to decode JSON from the file '{name}'.")
+        # Use enrich_attrs here to enrich your requests to Dynatrace.
+        # For example, when instrumenting with OpenTelemetry, add the data as resource attributes.
+        provider = TracerProvider(resource=resource)
+        processor = BatchSpanProcessor(
+            OTLPSpanExporter(
+                endpoint=dt_endpoint,
+                headers={"Authorization": "Api-Token {}".format(dt_api_token)}
+                ))
+
+        provider.add_span_processor(processor)
+        trace.set_tracer_provider(provider)
+        set_global_textmap(TraceContextTextMapPropagator())
+        # Add tracing auto-instrumentation for Flask, jinja and requests
         FlaskInstrumentor().instrument_app(app)
+        RequestsInstrumentor().instrument()
+        Jinja2Instrumentor().instrument()
+
     else:
         app.logger.info("🚫 Tracing disabled.")
 
