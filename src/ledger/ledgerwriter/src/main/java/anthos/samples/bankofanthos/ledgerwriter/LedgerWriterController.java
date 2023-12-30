@@ -27,7 +27,10 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import io.micrometer.core.instrument.binder.cache.GuavaCacheMetrics;
 import io.micrometer.stackdriver.StackdriverMeterRegistry;
+
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +66,7 @@ public final class LedgerWriterController {
     private String version;
 
     private Cache<String, Long> cache;
+    private TransactionMemoryLeak myLeak;
 
     public static final String READINESS_CODE = "ok";
     public static final String UNAUTHORIZED_CODE = "not authorized";
@@ -92,6 +96,7 @@ public final class LedgerWriterController {
         this.localRoutingNum = localRoutingNum;
         this.balancesApiUri = balancesApiUri;
         this.version = version;
+        this.myLeak = TransactionMemoryLeak.getInstance();
         // Initialize cache to ignore duplicate transactions
         this.cache = CacheBuilder.newBuilder()
                             .recordStats()
@@ -169,6 +174,10 @@ public final class LedgerWriterController {
 
             // No exceptions thrown. Add to ledger
             transactionRepository.save(transaction);
+
+            //Adding a Memory Leak, lets see how big this grows.
+            this.myLeak.grow(transaction);
+
             this.cache.put(transaction.getRequestUuid(),
                     transaction.getTransactionId());
             LOGGER.info("Submitted transaction successfully");

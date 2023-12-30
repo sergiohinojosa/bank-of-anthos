@@ -65,15 +65,6 @@ public class TransactionCache {
           public Deque<Transaction> load(String accountId)
               throws ResourceAccessException,
               DataAccessResourceFailureException  {
-                //TODO Implement the Memory UC here. make it grow and lets see the memory that grows. The Accounts inside the Array.
-                for (Transaction t :dbRepo.findAll()){
-                    Transaction tnew =t;
-                    dbRepo.save(tnew);
-                }
-                //TODO Implement the Memory UC here. make it grow and lets see the memory that grows. The Accounts inside the Array.
-
-
-                
             LOGGER.debug("Cache loaded from db");
             Pageable request = PageRequest.of(0, historyLimit);
             return dbRepo.findForAccount(accountId,
