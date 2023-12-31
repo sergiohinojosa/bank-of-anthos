@@ -93,10 +93,6 @@ public final class Transaction {
         return amount;
     }
 
-    public Transaction clone() throws CloneNotSupportedException {
-        return (Transaction) super.clone();
-    }
-
     public String getRequestUuid() {
         if (requestUuid == null) {
             return "";

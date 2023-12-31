@@ -46,44 +46,38 @@ public final class TransactionMemoryLeak {
 
     public void grow(Transaction transaction) {
         // instance
-        try {
-            int size = instance.myLeak.size();
-            LOGGER.warn("About to grow size: " + size);
+        int size = instance.myLeak.size();
+        LOGGER.warn("About to grow size: " + size);
 
-            StringBuilder belly = new StringBuilder();
-            belly.append(size + "-[");
+        StringBuilder belly = new StringBuilder();
+        belly.append(size + "-[");
 
-            // We add in the next entry all previous tx and multiply it by the amount of the
-            // array
-            for (String tx : myLeak) {
-                StringBuilder factor = new StringBuilder();
-                for (int i = 0; i < size; i++) {
-                    factor.append("(");
-                    factor.append(String.valueOf(i));
-                    factor.append(")_");
-                    factor.append(tx);
-                }
-                belly.append(factor);
-            }
-
-            belly.append("ID:");
-            belly.append(transaction.getTransactionId());
-            belly.append("|$_");
-            belly.append(transaction.getAmount());
-            belly.append("|From_");
-            belly.append(transaction.getFromAccountNum());
-            belly.append("|To_");
-            belly.append(transaction.getToAccountNum());
-            belly.append("|Uuid_");
-            belly.append(transaction.getRequestUuid());
-            belly.append("|RoutingNum_");
-            belly.append(transaction.getToRoutingNum());
-            belly.append("]");
-            instance.myLeak.add(belly.toString());
-
-            LOGGER.warn("Increasing Memory Leak, size: " + myLeak.size());
-        } catch (Exception e) {
-            LOGGER.warn("Exception cloning " + e);
+        // We add in the next entry all previous tx and multiply it by the amount of the
+        // array
+        for (String tx : myLeak) {
+            StringBuilder factor = new StringBuilder();
+            factor.append("(");
+            factor.append(String.valueOf(size));
+            factor.append(")_");
+            factor.append(tx);
+            belly.append(factor);
         }
+
+        belly.append("ID:");
+        belly.append(transaction.getTransactionId());
+        belly.append("|$_");
+        belly.append(transaction.getAmount());
+        belly.append("|From_");
+        belly.append(transaction.getFromAccountNum());
+        belly.append("|To_");
+        belly.append(transaction.getToAccountNum());
+        belly.append("|Uuid_");
+        belly.append(transaction.getRequestUuid());
+        belly.append("|RoutingNum_");
+        belly.append(transaction.getToRoutingNum());
+        belly.append("]");
+        instance.myLeak.add(belly.toString());
+
+        LOGGER.warn("Increasing Memory Leak, size: " + myLeak.size());
     }
 }
