@@ -28,16 +28,16 @@ calculateVersion() {
         VERSION="1.0.1"
         ;;
     "02" | "08")
-        VERSION="1.0.0"
+        VERSION="1.0.2"
         ;;
     "03" | "09")
-        VERSION="1.0.1"
-        ;;
-    "04" | "10")
         VERSION="1.0.0"
         ;;
-    "05" | "11")
+    "04" | "10")
         VERSION="1.0.1"
+        ;;
+    "05" | "11")
+        VERSION="1.0.2"
         ;;
     esac
 }
@@ -59,8 +59,8 @@ rolloutDeployments() {
         # Bumping up deployment
         kubectl -n $NAMESPACE set image deployment/$deployment $container=$REPOSITORY/$deployment:$VERSION
     done
-    echo "waiting for all deployments to be ready"
-    kubectl wait --for=condition=available --timeout=300s --all deployments --namespace $NAMESPACE || true
+    echo "Waiting for all pods of all deployments to be ready and running..."
+    kubectl wait --for=condition=Ready --timeout=300s --all pods --namespace $NAMESPACE || true
 }
 
 getNodes() {
