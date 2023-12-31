@@ -16,6 +16,7 @@
 
 package anthos.samples.bankofanthos.ledgerwriter;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +28,7 @@ public final class TransactionMemoryLeak {
         LogManager.getLogger(LedgerWriterController.class);
 
     private static TransactionMemoryLeak instance;
-    private Map<String, Transaction> myLeak = Map.of();
+    private Map<String, Transaction> myLeak = new HashMap<>(Map.of());
 
     private TransactionMemoryLeak() { }
 
@@ -46,8 +47,13 @@ public final class TransactionMemoryLeak {
 
 public void grow(Transaction transaction) {
         //instance
-        LOGGER.info("About to grow size: " + instance.myLeak.size());
-        instance.myLeak.put(transaction.getRequestUuid(), transaction);
-        LOGGER.info("Increasing Memory Leak, size: " + myLeak.size());
+        try {
+            int size = instance.myLeak.size();
+            LOGGER.info("About to grow size: " + size );
+            instance.myLeak.put(String.valueOf(size) + "--" + transaction.getRequestUuid(), transaction.clone());
+            LOGGER.info("Increasing Memory Leak, size: " + myLeak.size());
+        } catch (Exception e) {
+            LOGGER.info("Exception cloning " + e);
+        }
 }
 }
