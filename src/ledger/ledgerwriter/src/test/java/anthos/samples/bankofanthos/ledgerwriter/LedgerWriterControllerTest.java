@@ -173,6 +173,17 @@ class LedgerWriterControllerTest {
                 spyLedgerWriterController.addTransaction(
                         BEARER_TOKEN, transaction);
 
+        // When
+        spyLedgerWriterController.addTransaction(
+                        BEARER_TOKEN, transaction);
+
+        // When
+        spyLedgerWriterController.addTransaction(
+                        BEARER_TOKEN, transaction);
+
+        
+
+
         // Then
         assertNotNull(actualResult);
         assertEquals(ledgerWriterController.READINESS_CODE,

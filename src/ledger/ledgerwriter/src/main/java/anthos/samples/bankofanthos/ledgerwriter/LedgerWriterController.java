@@ -170,7 +170,7 @@ public final class LedgerWriterController {
                             EXCEPTION_MESSAGE_INSUFFICIENT_BALANCE);
                 }
             }
-
+            LOGGER.warn("Transaction will be persisted and into memory");
             // No exceptions thrown. Add to ledger
             transactionRepository.save(transaction);
 
@@ -179,7 +179,7 @@ public final class LedgerWriterController {
 
             this.cache.put(transaction.getRequestUuid(),
                     transaction.getTransactionId());
-            LOGGER.info("Submitted transaction successfully");
+            LOGGER.info("Submitted transaction successfully for account " + transaction.getFromAccountNum());
             return new ResponseEntity<>(READINESS_CODE,
                     HttpStatus.CREATED);
 

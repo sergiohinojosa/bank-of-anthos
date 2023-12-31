@@ -16,21 +16,20 @@
 
 package anthos.samples.bankofanthos.ledgerwriter;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 public final class TransactionMemoryLeak {
-    private static final Logger LOGGER =
-        LogManager.getLogger(LedgerWriterController.class);
+    private static final Logger LOGGER = LogManager.getLogger(TransactionMemoryLeak.class);
 
     private static TransactionMemoryLeak instance;
-    private Map<String, Transaction> myLeak = new HashMap<>(Map.of());
+    private List<String> myLeak = new ArrayList<String>();
 
-    private TransactionMemoryLeak() { }
+    private TransactionMemoryLeak() {
+    }
 
     // static block initialization for exception handling
     static {
@@ -45,15 +44,46 @@ public final class TransactionMemoryLeak {
         return instance;
     }
 
-public void grow(Transaction transaction) {
-        //instance
+    public void grow(Transaction transaction) {
+        // instance
         try {
             int size = instance.myLeak.size();
-            LOGGER.info("About to grow size: " + size );
-            instance.myLeak.put(String.valueOf(size) + "--" + transaction.getRequestUuid(), transaction.clone());
-            LOGGER.info("Increasing Memory Leak, size: " + myLeak.size());
+            LOGGER.warn("About to grow size: " + size);
+
+            StringBuilder belly = new StringBuilder();
+            belly.append(size + "-[");
+
+            // We add in the next entry all previous tx and multiply it by the amount of the
+            // array
+            for (String tx : myLeak) {
+                StringBuilder factor = new StringBuilder();
+                for (int i = 0; i < size; i++) {
+                    factor.append("(");
+                    factor.append(String.valueOf(i));
+                    factor.append(")_");
+                    factor.append(tx);
+                }
+                belly.append(factor);
+            }
+
+            belly.append("ID:");
+            belly.append(transaction.getTransactionId());
+            belly.append("|$_");
+            belly.append(transaction.getAmount());
+            belly.append("|From_");
+            belly.append(transaction.getFromAccountNum());
+            belly.append("|To_");
+            belly.append(transaction.getToAccountNum());
+            belly.append("|Uuid_");
+            belly.append(transaction.getRequestUuid());
+            belly.append("|RoutingNum_");
+            belly.append(transaction.getToRoutingNum());
+            belly.append("]");
+            instance.myLeak.add(belly.toString());
+
+            LOGGER.warn("Increasing Memory Leak, size: " + myLeak.size());
         } catch (Exception e) {
-            LOGGER.info("Exception cloning " + e);
+            LOGGER.warn("Exception cloning " + e);
         }
-}
+    }
 }
