@@ -11,6 +11,7 @@ items:
       environment: ${ENVIRONMENT}
       team: ledger
       tier: backend
+      app.kubernetes.io/version: ${VERSION}
     annotations:
      kubectl.kubernetes.io/last-applied-configuration: ""
   spec:
@@ -54,14 +55,28 @@ items:
           - name: CACHE_SIZE
             value: "1000000"
           - name: JVM_OPTS
-            value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xms256m -Xmx512m
+            value: ${JVM_OPTS}
           - name: LOG_LEVEL
-            value: info
+            value: ${LOG_LEVEL}
           - name: NAMESPACE
             valueFrom:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.namespace
+          - name: DT_RELEASE_VERSION
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app.kubernetes.io/version']
+          - name: DT_RELEASE_BUILD_VERSION
+            value: ${DT_RELEASE_BUILD_VERSION}
+          - name: DT_RELEASE_STAGE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['environment']
+          - name: DT_RELEASE_PRODUCT
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['application']
           envFrom:
           - configMapRef:
               name: environment-config
@@ -69,7 +84,7 @@ items:
               name: ledger-db-config
           name: balancereader
           image: ${REPOSITORY}/balancereader:${VERSION}
-          imagePullPolicy: Always
+          imagePullPolicy: ${imagePullPolicy}
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -153,6 +168,7 @@ items:
       environment: ${ENVIRONMENT}
       team: accounts
       tier: backend
+      app.kubernetes.io/version: ${VERSION}
     name: contacts
     namespace: ${NAMESPACE}
   spec:
@@ -192,7 +208,21 @@ items:
           - name: ENABLE_TRACING
             value: "true"
           - name: LOG_LEVEL
-            value: info
+            value: ${LOG_LEVEL}
+          - name: DT_RELEASE_VERSION
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app.kubernetes.io/version']
+          - name: DT_RELEASE_BUILD_VERSION
+            value: ${DT_RELEASE_BUILD_VERSION}
+          - name: DT_RELEASE_STAGE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['environment']
+          - name: DT_RELEASE_PRODUCT
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['application']
           - name: DT_API_TOKEN
             valueFrom:
               secretKeyRef:
@@ -209,7 +239,7 @@ items:
           - configMapRef:
               name: accounts-db-config
           image: ${REPOSITORY}/contacts:${VERSION}
-          imagePullPolicy: Always
+          imagePullPolicy: ${imagePullPolicy}
           name: contacts
           readinessProbe:
             failureThreshold: 3
@@ -275,6 +305,7 @@ items:
       environment: ${ENVIRONMENT}
       team: frontend
       tier: web
+      app.kubernetes.io/version: ${VERSION}
     name: frontend
     namespace: ${NAMESPACE}
   spec:
@@ -316,7 +347,7 @@ items:
           - name: SCHEME
             value: http
           - name: LOG_LEVEL
-            value: info
+            value: ${LOG_LEVEL}
           - name: DEFAULT_USERNAME
             valueFrom:
               configMapKeyRef:
@@ -349,13 +380,27 @@ items:
               secretKeyRef:
                 key: DT_ENDPOINT
                 name: dynatrace-secret
+          - name: DT_RELEASE_VERSION
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app.kubernetes.io/version']
+          - name: DT_RELEASE_BUILD_VERSION
+            value: ${DT_RELEASE_BUILD_VERSION}
+          - name: DT_RELEASE_STAGE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['environment']
+          - name: DT_RELEASE_PRODUCT
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['application']
           envFrom:
           - configMapRef:
               name: environment-config
           - configMapRef:
               name: service-api-config
           image: ${REPOSITORY}/frontend:${VERSION}
-          imagePullPolicy: Always
+          imagePullPolicy: ${imagePullPolicy}
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -431,6 +476,7 @@ items:
       environment: ${ENVIRONMENT}
       team: ledger
       tier: backend
+      app.kubernetes.io/version: ${VERSION}
   spec:
     progressDeadlineSeconds: 600
     replicas: 1
@@ -470,14 +516,28 @@ items:
           - name: ENABLE_METRICS
             value: "false"
           - name: JVM_OPTS
-            value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+ExitOnOutOfMemoryError -Xms256m -Xmx512m
+            value: ${JVM_OPTS}
           - name: LOG_LEVEL
-            value: info
+            value: ${LOG_LEVEL}
           - name: NAMESPACE
             valueFrom:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.namespace
+          - name: DT_RELEASE_VERSION
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app.kubernetes.io/version']
+          - name: DT_RELEASE_BUILD_VERSION
+            value: ${DT_RELEASE_BUILD_VERSION}
+          - name: DT_RELEASE_STAGE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['environment']
+          - name: DT_RELEASE_PRODUCT
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['application']
           envFrom:
           - configMapRef:
               name: environment-config
@@ -486,7 +546,7 @@ items:
           - configMapRef:
               name: ledger-db-config
           image: ${REPOSITORY}/ledgerwriter:${VERSION}
-          imagePullPolicy: Always
+          imagePullPolicy: ${imagePullPolicy}
           name: ledgerwriter
           readinessProbe:
             failureThreshold: 3
@@ -561,6 +621,7 @@ items:
       environment: ${ENVIRONMENT}
       team: ledger
       tier: backend
+      app.kubernetes.io/version: ${VERSION}
     name: transactionhistory
     namespace: ${NAMESPACE}
   spec:
@@ -610,22 +671,35 @@ items:
           - name: HISTORY_LIMIT
             value: "100"
           - name: JVM_OPTS
-            value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
-              -Xms256m -Xmx512m
+            value: ${JVM_OPTS}
           - name: LOG_LEVEL
-            value: info
+            value: ${LOG_LEVEL}
           - name: NAMESPACE
             valueFrom:
               fieldRef:
                 apiVersion: v1
                 fieldPath: metadata.namespace
+          - name: DT_RELEASE_VERSION
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app.kubernetes.io/version']
+          - name: DT_RELEASE_BUILD_VERSION
+            value: ${DT_RELEASE_BUILD_VERSION}
+          - name: DT_RELEASE_STAGE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['environment']
+          - name: DT_RELEASE_PRODUCT
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['application']
           envFrom:
           - configMapRef:
               name: environment-config
           - configMapRef:
               name: ledger-db-config
           image: ${REPOSITORY}/transactionhistory:${VERSION}
-          imagePullPolicy: Always
+          imagePullPolicy: ${imagePullPolicy}
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -710,6 +784,7 @@ items:
       environment: ${ENVIRONMENT}
       team: accounts
       tier: backend
+      app.kubernetes.io/version: ${VERSION}
     name: userservice
     namespace: ${NAMESPACE}
   spec:
@@ -753,7 +828,7 @@ items:
           - name: PRIV_KEY_PATH
             value: /tmp/.ssh/privatekey
           - name: LOG_LEVEL
-            value: info
+            value: ${LOG_LEVEL}
           - name: DT_API_TOKEN
             valueFrom:
               secretKeyRef:
@@ -764,13 +839,27 @@ items:
               secretKeyRef:
                 key: DT_ENDPOINT
                 name: dynatrace-secret
+          - name: DT_RELEASE_VERSION
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app.kubernetes.io/version']
+          - name: DT_RELEASE_BUILD_VERSION
+            value: ${DT_RELEASE_BUILD_VERSION}
+          - name: DT_RELEASE_STAGE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['environment']
+          - name: DT_RELEASE_PRODUCT
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['application']
           envFrom:
           - configMapRef:
               name: environment-config
           - configMapRef:
               name: accounts-db-config
           image: ${REPOSITORY}/userservice:${VERSION}
-          imagePullPolicy: Always
+          imagePullPolicy: ${imagePullPolicy}
           name: userservice
           ports:
           - containerPort: 8080

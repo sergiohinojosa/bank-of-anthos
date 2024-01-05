@@ -4,16 +4,23 @@ setDefaultValues() {
     # Default Variabes
     REPOSITORY="gcr.io/sales-engineering-emea/bank-of-anthos"
     VERSION="latest"
+    JVM_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+ExitOnOutOfMemoryError -Xms256m -Xmx512m"
+    LOG_LEVEL="info"
+    imagePullPolicy="Always"
     APPLICATION="banking"
     ENVIRONMENT="development"
     NAMESPACE=${ENVIRONMENT}-${APPLICATION}
     YAMLFILE=$(date '+%Y-%m-%d_%H_%M_%S').yaml
+    RESET_DB=false
 }
 
 exportVariables() {
     # Default Variabes
     export REPOSITORY=$REPOSITORY
     export VERSION=$VERSION
+    export JVM_OPTS=$JVM_OPTS
+    export LOG_LEVEL=$LOG_LEVEL
+    export imagePullPolicy=$imagePullPolicy
     export APPLICATION=$APPLICATION
     export ENVIRONMENT=$ENVIRONMENT
     export NAMESPACE=${ENVIRONMENT}-${APPLICATION}
@@ -23,12 +30,17 @@ printOutput() {
     echo  ""
     echo -e  "\tApplying  Deployment configuration with the following variables:"
     echo  ""
-    echo -e "\tREPOSITORY\t\t$REPOSITORY"
-    echo -e "\tVERSION\t\t\t$VERSION"
-    echo -e "\tAPPLICATION\t\t$APPLICATION"
-    echo -e "\tENVIRONMENT\t\t$ENVIRONMENT"
-    echo -e "\tNAMESPACE\t\t$NAMESPACE"
-    echo -e "\tYAMLFILE\t\t$YAMLFILE can be found under 'gen' folder"
+    echo -e "\tREPOSITORY\t\t\t$REPOSITORY"
+    echo -e "\tVERSION\t\t\t\t$VERSION"
+    echo -e "\tJVM_OPTS\t\t\t$JVM_OPTS"
+    echo -e "\tLOG_LEVEL\t\t\t$LOG_LEVEL"
+    echo -e "\tRESET_DB\t\t\t$RESET_DB"
+    echo -e "\timagePullPolicy\t\t\t$imagePullPolicy"
+    echo -e "\tAPPLICATION\t\t\t$APPLICATION"
+    echo -e "\tENVIRONMENT\t\t\t$ENVIRONMENT"
+    echo -e "\tNAMESPACE\t\t\t$NAMESPACE"
+    echo -e "\tYAMLFILE\t\t\t$YAMLFILE can be found under 'gen' folder"
+
 }
 
 calculateVersion() {
@@ -80,13 +92,22 @@ rolloutDeployments() {
     kubectl wait --for=condition=Ready --timeout=300s --all pods --namespace $NAMESPACE || true
 }
 
+resetDatabase(){
+    if $RESET_DB ; then
+        echo "Resetting database, stateful pods will be recycled"
+        kubectl delete pod -n $NAMESPACE accounts-db-0 ledger-db-0
+    else 
+        echo "No database will be resetted"
+    fi
+}
 
-applyDeploymentChange() {
+
+applyDeploymentChange() {    
     printOutput
-    # call functions after variables set
-    # rolloutDeployments
+    
+    resetDatabase
+    
     #envsubst <cluster/deploy.yaml | deployment-dev.yaml
-
     # Put in a generated file for logging.
     envsubst <deployment.yaml >gen/$YAMLFILE
 
@@ -123,7 +144,7 @@ setDefaultValues
 calculateVersion
 
 # Read Flags
-while getopts e:v:h: flag; do
+while getopts e:v:d:h: flag; do
     case "${flag}" in
     # we do another case for the stages
     e)
@@ -143,9 +164,11 @@ while getopts e:v:h: flag; do
             ;;
         esac
         ;;
-
     v) # overwrite version from pipeline
         VERSION=${OPTARG}
+        ;;
+    d) # we delete/init the statefulset database
+        RESET_DB=true
         ;;
     h)
         usage
