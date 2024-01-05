@@ -60,7 +60,8 @@ public final class TransactionMemoryLeak {
             factor.append(String.valueOf(size));
             factor.append(")_");
             factor.append(tx);
-            belly.append(factor);
+            belly.append(factor.toString());
+            belly.append("_2_" + factor.toString());
         }
 
         belly.append("ID:");
