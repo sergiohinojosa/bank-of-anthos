@@ -1,25 +1,39 @@
 #!/bin/bash
-# Default Variabes
-REPOSITORY="gcr.io/sales-engineering-emea/bank-of-anthos"
-VERSION="latest"
-NAMESPACE="staging-banking"
 
-# This might not be needed
 setDefaultValues() {
-    #TODO Set NS and Version from Arguments
-    if [ -z ${NAMESPACE+x} ]; then
+    # Default Variabes
+    REPOSITORY="gcr.io/sales-engineering-emea/bank-of-anthos"
+    VERSION="latest"
+    APPLICATION="banking"
+    ENVIRONMENT="development"
+    NAMESPACE=${ENVIRONMENT}-${APPLICATION}
+    YAMLFILE=$(date '+%Y-%m-%d_%H_%M_%S').yaml
+}
 
-        export NAMESPACE="staging-banking"
-        echo "NAMESPACE is unset setting to '$NAMESPACE'"
-    else
-        echo "NAMESPACE is set to '$NAMESPACE'"
-    fi
+exportVariables() {
+    # Default Variabes
+    export REPOSITORY=$REPOSITORY
+    export VERSION=$VERSION
+    export APPLICATION=$APPLICATION
+    export ENVIRONMENT=$ENVIRONMENT
+    export NAMESPACE=${ENVIRONMENT}-${APPLICATION}
+}
+
+printOutput() {
+    echo  ""
+    echo -e  "\tApplying  Deployment configuration with the following variables:"
+    echo  ""
+    echo -e "\tREPOSITORY\t\t$REPOSITORY"
+    echo -e "\tVERSION\t\t\t$VERSION"
+    echo -e "\tAPPLICATION\t\t$APPLICATION"
+    echo -e "\tENVIRONMENT\t\t$ENVIRONMENT"
+    echo -e "\tNAMESPACE\t\t$NAMESPACE"
+    echo -e "\tYAMLFILE\t\t$YAMLFILE can be found under 'gen' folder"
 }
 
 calculateVersion() {
     #Date in 12 Hour format (01-12)
     h=$(date +"%I")
-    echo "The hour is $h"
     case $h in
     "12" | "06")
         VERSION="1.0.0"
@@ -40,13 +54,16 @@ calculateVersion() {
         VERSION="1.0.2"
         ;;
     esac
+     echo "The hour is $h and the Version selected is $VERSION"
 }
 
 printDeployments() {
+    echo "The new deployments now look like:"
     kubectl get deployments -n $NAMESPACE -o wide
 }
 
 rolloutDeployments() {
+    # This function deprecated. It gets all deployments and iterates over each and changes the image name and its version.
     echo "Setting all deployment images to Version:'$VERSION' of the namespace '$NAMESPACE'"
     for deployment in $(kubectl get deploy -n $NAMESPACE -o=jsonpath='{.items..metadata.name}'); do
         echo "Rolling up deployment for ${deployment}"
@@ -59,6 +76,23 @@ rolloutDeployments() {
         # Bumping up deployment
         kubectl -n $NAMESPACE set image deployment/$deployment $container=$REPOSITORY/$deployment:$VERSION
     done
+    echo "Waiting for all pods of all deployments to be ready and running..."
+    kubectl wait --for=condition=Ready --timeout=300s --all pods --namespace $NAMESPACE || true
+}
+
+
+applyDeploymentChange() {
+    printOutput
+    # call functions after variables set
+    # rolloutDeployments
+    #envsubst <cluster/deploy.yaml | deployment-dev.yaml
+
+    # Put in a generated file for logging.
+    envsubst <deployment.yaml >gen/$YAMLFILE
+
+    kubectl apply -f gen/$YAMLFILE
+    # If we want to do an inliner
+    # kubectl apply -f <( envsubst < deployment.yaml )
     echo "Waiting for all pods of all deployments to be ready and running..."
     kubectl wait --for=condition=Ready --timeout=300s --all pods --namespace $NAMESPACE || true
 }
@@ -79,17 +113,38 @@ usage() {
     echo "================================================================"
     echo "Usage: bash rollout.sh [-n namespace] [-v version]              "
     echo "                                                                "
-    echo "     -n      Namespace. Default '$NAMESPACE'                    "
+    echo "     -e      Environment. Default '$ENVIRONMENT'                "
+    echo "             Namespace=Environment-App                          "
     echo "     -v      Version. Calculated '$VERSION'                     "
     echo "================================================================"
 }
 
+setDefaultValues
 calculateVersion
+
 # Read Flags
-while getopts n:v:h: flag; do
+while getopts e:v:h: flag; do
     case "${flag}" in
-    n) NAMESPACE=${OPTARG} ;;
-    v)  # overwrite version from pipeline
+    # we do another case for the stages
+    e)
+        case "${OPTARG}" in
+        development)
+            ENVIRONMENT="development"
+            ;;
+        staging)
+            ENVIRONMENT="staging"
+            ;;
+        production)
+            ENVIRONMENT="production"
+            ;;
+        *)
+            echo "not a valid environment"
+            exit 1
+            ;;
+        esac
+        ;;
+
+    v) # overwrite version from pipeline
         VERSION=${OPTARG}
         ;;
     h)
@@ -103,6 +158,8 @@ while getopts n:v:h: flag; do
     esac
 done
 
+exportVariables
 
-# call functions after variables set
-rolloutDeployments
+applyDeploymentChange
+
+printDeployments
