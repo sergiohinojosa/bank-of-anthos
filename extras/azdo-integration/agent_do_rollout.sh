@@ -87,7 +87,7 @@ calculateVersion() {
 
 printDeployments() {
     echo "The new deployments now look like:"
-    kubectl get deployments -n $NAMESPACE -o wide
+    kubectl get deployments -n $NAMESPACE -o wide || true
 }
 
 rolloutDeployments() {
@@ -105,7 +105,7 @@ rolloutDeployments() {
         kubectl -n $NAMESPACE set image deployment/$deployment $container=$REPOSITORY/$deployment:$VERSION
     done
     echo "Waiting for all pods of all deployments to be ready and running..."
-    kubectl wait --for=condition=Ready --timeout=300s --all pods --namespace $NAMESPACE || true
+    kubectl wait --for=condition=Ready --timeout=300s --all pods --namespace $NAMESPACE
 }
 
 resetDatabase() {
