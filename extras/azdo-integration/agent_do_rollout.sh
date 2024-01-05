@@ -105,7 +105,8 @@ rolloutDeployments() {
         kubectl -n $NAMESPACE set image deployment/$deployment $container=$REPOSITORY/$deployment:$VERSION
     done
     echo "Waiting for all pods of all deployments to be ready and running..."
-    kubectl wait --for=condition=Ready --timeout=300s --all pods --namespace $NAMESPACE
+
+    kubectl wait --for=condition=Ready --timeout=300s --all pods --namespace $NAMESPACE -l='app.kubernetes.io/version=$VERSION'
 }
 
 resetDatabase() {
@@ -139,7 +140,10 @@ applyDeploymentChange() {
     # If we want to do an inliner
     # kubectl apply -f <( envsubst < deployment.yaml )
     echo "Waiting for all pods of all deployments to be ready and running..."
-    kubectl wait --for=condition=Ready --timeout=300s --all pods --namespace $NAMESPACE || true
+    
+    # TODO Fix this and add label to pods, swap for sleep
+    #kubectl wait --for=condition=Ready --timeout=300s --all pods --namespace $NAMESPACE || true
+    sleep 150 || true
 }
 
 getNodes() {

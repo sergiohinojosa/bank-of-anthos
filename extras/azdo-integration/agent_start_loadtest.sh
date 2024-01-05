@@ -17,3 +17,7 @@ start_performance_test
 stop_timestamp=$(date '+%F %H:%M:00')
 echo $stop_timestamp
 echo "##vso[task.setvariable variable=stop_timestamp]$stop_timestamp"
+
+
+
+# AGENT_RELEASEDIRECTORY=/home/daniel_braaf/myagent/_work/r3/a /RELEASE_PRIMARYARTIFACTSOURCEALIAS/
