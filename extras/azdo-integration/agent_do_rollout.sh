@@ -124,7 +124,16 @@ applyDeploymentChange() {
 
     #envsubst <cluster/deploy.yaml | deployment-dev.yaml
     # Put in a generated file for logging.
-    envsubst <deployment.yaml >gen/$YAMLFILE
+
+    # If we are in AZDO then
+    if [ -z "$AGENT_RELEASEDIRECTORY" ]; then
+        echo "Running locally"
+    else
+        echo "Running in AzDo Agent machine"
+        cd $AGENT_RELEASEDIRECTORY/$RELEASE_PRIMARYARTIFACTSOURCEALIAS/extras/azdo-integration
+    fi
+    
+    envsubst < deployment.yaml > gen/$YAMLFILE
 
     kubectl apply -f gen/$YAMLFILE
     # If we want to do an inliner
