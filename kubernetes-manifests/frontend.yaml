@@ -32,7 +32,7 @@ spec:
     environment: development
     team: frontend
     tier: web
-  type: ClusterIP
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment

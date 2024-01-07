@@ -301,7 +301,6 @@ items:
       environment: ${ENVIRONMENT}
       team: frontend
       tier: web
-      app.kubernetes.io/version: ${VERSION}
     name: frontend
     namespace: ${NAMESPACE}
   spec:

@@ -105,7 +105,7 @@ rolloutDeployments() {
         kubectl -n $NAMESPACE set image deployment/$deployment $container=$REPOSITORY/$deployment:$VERSION
     done
     echo "Waiting for all pods of all deployments to be ready and running..."
-
+    
     kubectl wait --for=condition=Ready --timeout=300s --all pods --namespace $NAMESPACE -l='app.kubernetes.io/version=$VERSION'
 }
 
@@ -116,6 +116,24 @@ resetDatabase() {
     else
         echo "No database will be resetted"
     fi
+}
+
+createApp(){
+
+    exportVariables
+
+    # If we are in AZDO then
+    if [ -z "$AGENT_RELEASEDIRECTORY" ]; then
+        echo "Running locally"
+    else
+        echo "Running in AzDo Agent machine"
+        cd $AGENT_RELEASEDIRECTORY/$RELEASE_PRIMARYARTIFACTSOURCEALIAS/extras/azdo-integration
+    fi
+
+    envsubst < banking.yaml > gen/banking-$YAMLFILE
+
+    kubectl apply -f gen/banking-$YAMLFILE -n $NAMESPACE
+
 }
 
 applyDeploymentChange() {
@@ -134,9 +152,9 @@ applyDeploymentChange() {
         cd $AGENT_RELEASEDIRECTORY/$RELEASE_PRIMARYARTIFACTSOURCEALIAS/extras/azdo-integration
     fi
     
-    envsubst < deployment.yaml > gen/$YAMLFILE
+    envsubst < deployments.yaml > gen/deploy-$YAMLFILE
 
-    kubectl apply -f gen/$YAMLFILE
+    kubectl apply -f gen/deploy-$YAMLFILE
     # If we want to do an inliner
     # kubectl apply -f <( envsubst < deployment.yaml )
     echo "Waiting for all pods of all deployments to be ready and running..."
@@ -160,11 +178,14 @@ usage() {
     echo "in a given namespace                                            "
     echo "                                                                "
     echo "================================================================"
-    echo "Usage: bash rollout.sh [-n namespace] [-v version]              "
+    echo "Usage: bash rollout.sh [-e environment (development/staging     "
+    echo " production)] [-v version]                                      "
     echo "                                                                "
     echo "     -e      Environment. Default '$ENVIRONMENT'                "
-    echo "             Namespace=Environment-App                          "
+    echo "             Namespace=Environment-Application                  "
     echo "     -v      Version. Calculated '$VERSION'                     "
+    echo "     -d      Delete Database - Any argument e.g (yes)           "
+    echo "     -c      Create Structure (svc, sa, secrets, config)        "
     echo "================================================================"
 }
 
@@ -172,7 +193,7 @@ setDefaultValues
 calculateVersion
 
 # Read Flags
-while getopts e:v:d:h: flag; do
+while getopts e:v:d:h:c: flag; do
     case "${flag}" in
     # we do another case for the stages
     e)
@@ -200,6 +221,10 @@ while getopts e:v:d:h: flag; do
         ;;
     h)
         usage
+        exit 0
+        ;;
+    c) # create all
+        createApp
         exit 0
         ;;
     *)
