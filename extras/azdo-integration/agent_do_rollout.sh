@@ -245,6 +245,9 @@ result=$(curl --request POST 'https://sso.dynatrace.com/sso/oauth2/token' \
 --data-urlencode "client_secret=$dt_clientsecret" \
 --data-urlencode 'scope=document:documents:write document:documents:read document:documents:delete document:environment-shares:read document:environment-shares:write document:environment-shares:claim document:environment-shares:delete automation:workflows:read automation:workflows:write automation:workflows:run automation:rules:read automation:rules:write automation:calendars:read automation:calendars:write')
 result_dyna=$(echo $result | jq -r '.access_token')
+echo $result_dyna
+echo $dt_tenant_url
+echo $dt_event_wf
 }
 
 get_wf_status()
