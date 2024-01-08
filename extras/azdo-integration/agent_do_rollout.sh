@@ -44,11 +44,11 @@ exportVariables() {
     export dt_clientsecret=$dt_clientsecret
     export dt_clientid=$dt_clientid
     echo $RELEASE_RELEASENAME
-    echo $dt_event_wf
-    echo $dt_tenant_url
-    echo $dt_clientsecret
-    echo $dt_clientid   
-    echo $(dt_event_wf)
+    echo $RELEASE_dt_event_wf
+    echo $RELEASE_dt_tenant_url
+    echo $RELEASE_dt_clientsecret
+    echo $RELEASE_dt_clientid   
+    echo $(RELEASE_dt_event_wf)
 
     
 }
