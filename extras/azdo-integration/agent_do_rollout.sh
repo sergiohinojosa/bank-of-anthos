@@ -43,6 +43,7 @@ exportVariables() {
     export dt_tenant_url=$dt_tenant_url
     export dt_clientsecret=$dt_clientsecret
     export dt_clientid=$dt_clientid
+    echo $RELEASE_RELEASENAME
     echo $dt_event_wf
     echo $dt_tenant_url
     echo $dt_clientsecret
