@@ -39,17 +39,6 @@ exportVariables() {
     export NAMESPACE=${ENVIRONMENT}-${APPLICATION}
     export DT_RELEASE_VERSION=$VERSION
     export DT_RELEASE_BUILD_VERSION=$DT_RELEASE_BUILD_VERSION
-    export dt_event_wf=$dt_event_wf
-    export dt_tenant_url=$dt_tenant_url
-    export dt_clientsecret=$dt_clientsecret
-    export dt_clientid=$dt_clientid
-    echo $RELEASE_RELEASENAME
-    echo $1
-    echo $2
-    echo $3
-    echo $4
-    echo $5
-
     
 }
 
@@ -254,5 +243,3 @@ exportVariables
 applyDeploymentChange
 
 printDeployments
-
-start_event_wf
