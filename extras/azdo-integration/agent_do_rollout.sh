@@ -254,7 +254,7 @@ get_wf_status()
 {
 create_token
 curl -X 'GET' \
-  "$(dt_tenant_url)/platform/automation/v1/executions/$(echo $id)" \
+  "$dt_tenant_url/platform/automation/v1/executions/$(echo $id)" \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -H "authorization: Bearer $(echo $result_dyna)" | jq -r '.state'
