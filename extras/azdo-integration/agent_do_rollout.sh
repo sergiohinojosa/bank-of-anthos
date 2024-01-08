@@ -48,6 +48,8 @@ exportVariables() {
     echo $dt_tenant_url
     echo $dt_clientsecret
     echo $dt_clientid   
+    echo $(dt_event_wf)
+
     
 }
 
