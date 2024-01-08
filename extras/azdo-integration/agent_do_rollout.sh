@@ -39,6 +39,15 @@ exportVariables() {
     export NAMESPACE=${ENVIRONMENT}-${APPLICATION}
     export DT_RELEASE_VERSION=$VERSION
     export DT_RELEASE_BUILD_VERSION=$DT_RELEASE_BUILD_VERSION
+    export dt_event_wf=$dt_event_wf
+    export dt_tenant_url=$dt_tenant_url
+    export dt_clientsecret=$dt_clientsecret
+    export dt_clientid=$dt_clientid
+    echo $dt_event_wf
+    echo $dt_tenant_url
+    echo $dt_clientsecret
+    echo $dt_clientid   
+    
 }
 
 printOutput() {
