@@ -44,11 +44,11 @@ exportVariables() {
     export dt_clientsecret=$dt_clientsecret
     export dt_clientid=$dt_clientid
     echo $RELEASE_RELEASENAME
-    echo $TEST
-    echo $tenant_url
-    echo $dt_clientsecret
-    echo $dt_clientid   
-    echo $(RELEASE_dt_event_wf)
+    echo $1
+    echo $2
+    echo $3
+    echo $4
+    echo $5
 
     
 }
@@ -246,54 +246,7 @@ while getopts e:v:d:h:c: flag; do
     esac
 done
 
-# send deployment event using workflows
 
-create_token()
-{
-result=$(curl --request POST 'https://sso.dynatrace.com/sso/oauth2/token' \
---header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'grant_type=client_credentials' \
---data-urlencode "client_id=$dt_clientid" \
---data-urlencode "client_secret=$dt_clientsecret" \
---data-urlencode 'scope=document:documents:write document:documents:read document:documents:delete document:environment-shares:read document:environment-shares:write document:environment-shares:claim document:environment-shares:delete automation:workflows:read automation:workflows:write automation:workflows:run automation:rules:read automation:rules:write automation:calendars:read automation:calendars:write')
-result_dyna=$(echo $result | jq -r '.access_token')
-echo $result_dyna
-echo $dt_tenant_url
-echo $dt_event_wf
-}
-
-get_wf_status()
-{
-create_token
-curl -X 'GET' \
-  "$dt_tenant_url/platform/automation/v1/executions/$(echo $id)" \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -H "authorization: Bearer $(echo $result_dyna)" | jq -r '.state'
-}
-
-start_event_wf()
-{
-create_token
-res=$(curl -X 'POST' \
-  "$dt_tenant_url/platform/automation/v1/workflows/$dt_event_wf/run" \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -H "authorization: Bearer $(echo $result_dyna)" \
-  -d '{
-         "params": {
-            "Release": $Release.ReleaseId,
-            "Pipelineurl": "$Release.ReleaseWebURL",
-            "stage": "staging"
-         }
-         }')
-id=$(echo $res | jq -r '.id')
-echo $id
-while [[ $(get_wf_status) == "RUNNING" ]]; do
-sleep 10
-done
-
-}
 
 
 exportVariables
