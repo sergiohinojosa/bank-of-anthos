@@ -19,8 +19,11 @@ setDefaultValues() {
     RESET_DB=false
 
     # Release Info from AzDo
-    DT_RELEASE_VERSION=$VERSION
-    DT_RELEASE_BUILD_VERSION=$RELEASE_RELEASENAME
+    #changing the versions (Daniel) otherwise we dont have unique identifyers for hot sessions
+    #DT_RELEASE_VERSION=$VERSION
+    #DT_RELEASE_BUILD_VERSION=$RELEASE_RELEASENAME
+    DT_RELEASE_VERSION=$Release_ReleaseId
+    DT_RELEASE_BUILD_VERSION=$Release_ReleaseId-$VERSION
 
     # RELEASE ID FROM AZDO
     #RELEASE_RELEASEID=387
@@ -37,7 +40,8 @@ exportVariables() {
     export APPLICATION=$APPLICATION
     export ENVIRONMENT=$ENVIRONMENT
     export NAMESPACE=${ENVIRONMENT}-${APPLICATION}
-    export DT_RELEASE_VERSION=$VERSION
+    #export DT_RELEASE_VERSION=$VERSION
+    export DT_RELEASE_VERSION=$Release_ReleaseId
     export DT_RELEASE_BUILD_VERSION=$DT_RELEASE_BUILD_VERSION
     
 }
@@ -242,8 +246,7 @@ echo "##vso[task.setvariable variable=DT_RELEASE_BUILD_VERSION]$DT_RELEASE_BUILD
 echo "##vso[task.setvariable variable=REPOSITORY]$REPOSITORY"
 echo "##vso[task.setvariable variable=APPLICATION]$APPLICATION"
 echo "##vso[task.setvariable variable=ENVIRONMENT]$ENVIRONMENT"
-echo "##vso[task.setvariable variable=NAMESPACE]$DT_RELEASE_BUILD_VERSION"
-echo "##vso[task.setvariable variable=DT_RELEASE_BUILD_VERSION]${ENVIRONMENT}-${APPLICATION}"
+echo "##vso[task.setvariable variable=NAMESPACE]$NAMESPACE"
 }
 
 exportVariables
