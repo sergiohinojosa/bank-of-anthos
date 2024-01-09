@@ -79,18 +79,22 @@ calculateVersion() {
     case $h in
     "12" | "04" | "08" )
         VERSION="1.0.0"
+        PROBLEM="none"
         ;;
     "01" | "05" | "09")
         VERSION="1.0.1"
+        PROBLEM="cpu"
         ;;
     "02" | "06" | "10")
         VERSION="1.0.2"
+        PROBLEM="memory"
         ;;
     "03" | "07"| "11")
         VERSION="1.0.3"
+        PROBLEM="n+1"
         ;;
     esac
-    echo "The hour is $h and the Version selected is $VERSION"
+    echo "The hour is $h and the Version selected is $VERSION with the problem $PROBLEM"
 }
 
 printDeployments() {
@@ -251,6 +255,7 @@ echo "##vso[task.setvariable variable=REPOSITORY]$REPOSITORY"
 echo "##vso[task.setvariable variable=APPLICATION]$APPLICATION"
 echo "##vso[task.setvariable variable=ENVIRONMENT]$ENVIRONMENT"
 echo "##vso[task.setvariable variable=NAMESPACE]$NAMESPACE"
+echo "##vso[task.setvariable variable=PROBLEM]$PROBLEM"
 }
 
 
