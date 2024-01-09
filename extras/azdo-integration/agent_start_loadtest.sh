@@ -1,5 +1,27 @@
 #!/bin/bash
 
+
+create_token()
+{
+result=$(curl --request POST 'https://sso.dynatrace.com/sso/oauth2/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=client_credentials' \
+--data-urlencode "client_id=$(dt_clientid)" \
+--data-urlencode "client_secret=$(dt_clientsecret)" \
+--data-urlencode 'scope=document:documents:write document:documents:read document:documents:delete document:environment-shares:read document:environment-shares:write document:environment-shares:claim document:environment-shares:delete automation:workflows:read automation:workflows:write automation:workflows:run automation:rules:read automation:rules:write automation:calendars:read automation:calendars:write')
+result_dyna=$(echo $result | jq -r '.access_token')
+}
+
+get_wf_status()
+{
+create_token
+curl -X 'GET' \
+  "$(dt_tenant_url)/platform/automation/v1/executions/$(echo $id)" \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -H "authorization: Bearer $(echo $result_dyna)" | jq -r '.state'
+}
+
 start_test_wf()
 {
 export dt_event_wf=$DT_EVENT_WF
@@ -40,6 +62,7 @@ start_performance_test() {
 
     echo "Pointing to $SERVER_URL with VirtualUsers $VU and Loops $LOOPS"
     echo "Loading Loadtest $JMX_FILE"
+    start_test_wf
 
     /opt/jmeter/apache-jmeter-5.5/bin/jmeter -n -t $JMX_FILE -JSERVER_URL=$SERVER_URL -JVUCount=$VU -JLoopCount=$LOOPS  -l testreport.jtl
 }
