@@ -251,8 +251,8 @@ create_token()
 result=$(curl --request POST 'https://sso.dynatrace.com/sso/oauth2/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=client_credentials' \
---data-urlencode "client_id=$(echo $DT_CLIENTID)" \
---data-urlencode "client_secret=$(echo $DT_CLIENTSECRET)" \
+--data-urlencode "client_id=${DT_CLIENTID}" \
+--data-urlencode "client_secret=${DT_CLIENTSECRET}" \
 --data-urlencode 'scope=document:documents:write document:documents:read document:documents:delete document:environment-shares:read document:environment-shares:write document:environment-shares:claim document:environment-shares:delete automation:workflows:read automation:workflows:write automation:workflows:run automation:rules:read automation:rules:write automation:calendars:read automation:calendars:write')
 result_dyna=$(echo $result | jq -r '.access_token')
 echo $result_dyna
@@ -262,7 +262,7 @@ get_wf_status()
 {
 create_token
 curl -X 'GET' \
-  "$(echo $DT_TENANT_URL)/platform/automation/v1/executions/$(echo $id)" \
+  "${DT_TENANT_URL}/platform/automation/v1/executions/$(echo $id)" \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -H "authorization: Bearer $(echo $result_dyna)" | jq -r '.state'
@@ -281,21 +281,21 @@ echo $APPLICATION
 echo $NAMESPACE
 create_token
 res=$(curl -X 'POST' \
-  "$(echo $DT_TENANT_URL)/platform/automation/v1/workflows/$(echo $DT_EVENT_WF)/run" \
+  "${DT_TENANT_URL}/platform/automation/v1/workflows/${DT_EVENT_WF}/run" \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -H "authorization: Bearer $(echo $result_dyna)" \
   -d '{
          "params": {
             "event_type": "CUSTOM_DEPLOYMENT",
-            "Release": "$(echo $RELEASE_RELEASEID)",
-            "Pipelineurl": "$(echo $RELEASE_RELEASEWEBURL)",
-            "stage": "$(echo $ENVIRONMENT)",
-            "Repository": "$(echo $REPOSITORY)",
-            "Release_Version": "$(echo $DT_RELEASE_VERSION)",
-            "Application": "$(echo $APPLICATION)",
-            "Namespace": "$(echo $NAMESPACE)",
-            "Build_Version": "$(echo $DT_RELEASE_BUILD_VERSION)"            
+            "Release": "${RELEASE_RELEASEID}",
+            "Pipelineurl": "${RELEASE_RELEASEWEBURL}",
+            "stage": "${ENVIRONMENT}",
+            "Repository": "${REPOSITORY}",
+            "Release_Version": "${DT_RELEASE_VERSION}",
+            "Application": "${APPLICATION}",
+            "Namespace": "${NAMESPACE}",
+            "Build_Version": "${DT_RELEASE_BUILD_VERSION}"            
          }
          }')
 id=$(echo $res | jq -r '.id')
