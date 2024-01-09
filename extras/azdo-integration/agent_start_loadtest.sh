@@ -6,7 +6,7 @@ export dt_event_wf=$DT_EVENT_WF
 export dt_clientsecret=$DT_CLIENTSECRET
 export dt_tenant_url=$DT_TENANT_URL
 export dt_clientid=$DT_CLIENTID
-export dt_clientid=$DT_CLIENTID
+
 create_token
 res=$(curl -X 'POST' \
   "$(dt_tenant_url)/platform/automation/v1/workflows/$(dt_event_wf)/run" \
