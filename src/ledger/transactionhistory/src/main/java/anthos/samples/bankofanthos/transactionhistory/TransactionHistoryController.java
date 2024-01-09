@@ -181,8 +181,9 @@ public final class TransactionHistoryController {
                                                   HttpStatus.UNAUTHORIZED);
             }
 
+
             // Load from cache
-            Deque<Transaction> historyList = cache.get(accountId);
+            Deque<Transaction> historyList = getFromImprovedCache(cache, accountId);
 
             // Set artificial extra latency.
             LOGGER.debug("Setting artificial latency");
@@ -205,6 +206,30 @@ public final class TransactionHistoryController {
             LOGGER.error("Cache error");
             return new ResponseEntity<>("cache error",
                                               HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (InterruptedException e1) {
+             LOGGER.error("Interrupted error");
+            return new ResponseEntity<>("Thread error on Synch",
+                                              HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    /**
+     * 
+     * @param cache
+     * @param accountId
+     * @return
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public synchronized Deque<Transaction> getFromImprovedCache(LoadingCache<String, Deque<Transaction>> cache, String accountId) throws ExecutionException, InterruptedException {
+        
+        // Adding a sleep s fo
+        LOGGER.debug("Cleaning cache");
+        cache.cleanUp();
+        LOGGER.debug("Sleeping for the Synch to Kick In");
+        Thread.sleep(100);
+        return cache.get(accountId);
+    }
+
 }
