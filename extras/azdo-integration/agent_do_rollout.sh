@@ -39,7 +39,7 @@ exportVariables() {
     export NAMESPACE=${ENVIRONMENT}-${APPLICATION}
     export RELEASE_RELEASEID=$RELEASE_RELEASEID
     export DT_RELEASE_VERSION=$RELEASE_RELEASEID
-    export DT_RELEASE_BUILD_VERSION=$RELEASE_RELEASENAME.$VERSION
+    export DT_RELEASE_BUILD_VERSION=$$RELEASE_RELEASENAME.$VERSION
 }
 
 printOutput() {
@@ -235,19 +235,8 @@ while getopts e:v:d:h:c: flag; do
     esac
 done
 
-setOutputVariables() 
-{
-echo "##vso[task.setvariable variable=DT_RELEASE_VERSION]$DT_RELEASE_VERSION"
-echo "##vso[task.setvariable variable=DT_RELEASE_BUILD_VERSION]$DT_RELEASE_BUILD_VERSION"
-echo "##vso[task.setvariable variable=REPOSITORY]$REPOSITORY"
-echo "##vso[task.setvariable variable=APPLICATION]$APPLICATION"
-echo "##vso[task.setvariable variable=ENVIRONMENT]$ENVIRONMENT"
-echo "##vso[task.setvariable variable=NAMESPACE]$NAMESPACE"
-}
-
 exportVariables
 
 applyDeploymentChange
 
 printDeployments
-setOutputVariables
