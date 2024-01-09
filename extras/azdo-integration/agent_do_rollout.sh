@@ -235,11 +235,20 @@ while getopts e:v:d:h:c: flag; do
     esac
 done
 
-
-
+setOutputVariables() 
+{
+echo "##vso[task.setvariable variable=DT_RELEASE_VERSION]$DT_RELEASE_VERSION"
+echo "##vso[task.setvariable variable=DT_RELEASE_BUILD_VERSION]$DT_RELEASE_BUILD_VERSION"
+echo "##vso[task.setvariable variable=REPOSITORY]$REPOSITORY"
+echo "##vso[task.setvariable variable=APPLICATION]$APPLICATION"
+echo "##vso[task.setvariable variable=ENVIRONMENT]$ENVIRONMENT"
+echo "##vso[task.setvariable variable=NAMESPACE]$DT_RELEASE_BUILD_VERSION"
+echo "##vso[task.setvariable variable=DT_RELEASE_BUILD_VERSION]${ENVIRONMENT}-${APPLICATION}"
+}
 
 exportVariables
 
 applyDeploymentChange
 
 printDeployments
+setOutputVariables
