@@ -215,7 +215,7 @@ public final class TransactionHistoryController {
 
 
     /**
-     * 
+     * We add a N+1 Query issue plus Synch
      * @param cache
      * @param accountId
      * @return
