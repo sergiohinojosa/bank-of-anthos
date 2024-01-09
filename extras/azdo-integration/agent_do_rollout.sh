@@ -46,8 +46,13 @@ exportVariables() {
     # Envs with problems
     export EXTRA_LATENCY_MILLIS=$EXTRA_LATENCY_MILLIS
     export dt_event_wf=$DT_EVENT_WF
-    echo $DT_EVENT_WF
-    echo $dt_event_wf=
+    export dt_clientsecret=$DT_CLIENTSECRET
+    export dt_tenant_url=$DT_TENANT_URL
+    export dt_clientid=$RELEASE_RELEASEID  
+    export dt_clientid=$DT_CLIENTID
+    export dt_clientid=$DT_CLIENTID
+    
+
 }
 
 printOutput() {
@@ -242,8 +247,104 @@ while getopts e:v:d:h:c: flag; do
     esac
 done
 
+create_token()
+{
+result=$(curl --request POST 'https://sso.dynatrace.com/sso/oauth2/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=client_credentials' \
+--data-urlencode "client_id=$(dt_clientid)" \
+--data-urlencode "client_secret=$(dt_clientsecret)" \
+--data-urlencode 'scope=document:documents:write document:documents:read document:documents:delete document:environment-shares:read document:environment-shares:write document:environment-shares:claim document:environment-shares:delete automation:workflows:read automation:workflows:write automation:workflows:run automation:rules:read automation:rules:write automation:calendars:read automation:calendars:write')
+result_dyna=$(echo $result | jq -r '.access_token')
+}
+
+get_wf_status()
+{
+create_token
+curl -X 'GET' \
+  "$(dt_tenant_url)/platform/automation/v1/executions/$(echo $id)" \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -H "authorization: Bearer $(echo $result_dyna)" | jq -r '.state'
+}
+
+start_event_wf()
+{
+create_token
+res=$(curl -X 'POST' \
+  "$(dt_tenant_url)/platform/automation/v1/workflows/$(dt_event_wf)/run" \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -H "authorization: Bearer $(echo $result_dyna)" \
+  -d '{
+         "params": {
+            "event_type": "CUSTOM_DEPLOYMENT",
+            "Release": $(RELEASE_RELEASEID),
+            "Pipelineurl": "$(RELEASE_RELEASEWEBURL)",
+            "stage": "$(ENVIRONMENT)",
+            "Repository": "$(REPOSITORY)",
+            "Release_Version": "$(DT_RELEASE_VERSION)",
+            "Application": "$(APPLICATION)",
+            "Namespace": "$(NAMESPACE)",
+            "Build_Version": "$(DT_RELEASE_BUILD_VERSION)"            
+         }
+         }')
+id=$(echo $res | jq -r '.id')
+echo $id
+while [[ $(get_wf_status) == "RUNNING" ]]; do
+sleep 10
+done
+
+}
+
+start_test_wf()
+{
+create_token
+res=$(curl -X 'POST' \
+  "$(dt_tenant_url)/platform/automation/v1/workflows/$(dt_event_wf)/run" \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -H "authorization: Bearer $(echo $result_dyna)" \
+  -d '{
+         "params": {
+            "event_type": "START_TEST",
+            "Release": $(RELEASE_RELEASEID),
+            "Pipelineurl": "$(RELEASE_RELEASEWEBURL)",
+            "stage": "$(ENVIRONMENT)",
+            "Repository": "$(REPOSITORY)",
+            "Release_Version": "$(DT_RELEASE_VERSION)",
+            "Application": "$(APPLICATION)",
+            "Namespace": "$(NAMESPACE)",
+            "Build_Version": "$(DT_RELEASE_BUILD_VERSION)"            
+         }
+         }')
+id=$(echo $res | jq -r '.id')
+echo $id
+while [[ $(get_wf_status) == "RUNNING" ]]; do
+sleep 10
+done
+
+}
+
+setOutputVariables() 
+{
+echo "##vso[task.setvariable variable=DT_RELEASE_VERSION]$DT_RELEASE_VERSION"
+echo "##vso[task.setvariable variable=DT_RELEASE_BUILD_VERSION]$DT_RELEASE_BUILD_VERSION"
+echo "##vso[task.setvariable variable=REPOSITORY]$REPOSITORY"
+echo "##vso[task.setvariable variable=APPLICATION]$APPLICATION"
+echo "##vso[task.setvariable variable=ENVIRONMENT]$ENVIRONMENT"
+echo "##vso[task.setvariable variable=NAMESPACE]$NAMESPACE"
+}
+
+
 exportVariables
 
 applyDeploymentChange
 
 printDeployments
+
+start_event_wf
+
+start_test_wf
+
+setOutputVariables
