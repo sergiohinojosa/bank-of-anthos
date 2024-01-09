@@ -13,7 +13,6 @@ items:
       tier: backend
       app.kubernetes.io/version: ${VERSION}
     annotations:
-     kubectl.kubernetes.io/last-applied-configuration: ""
   spec:
     replicas: 1
     selector:
