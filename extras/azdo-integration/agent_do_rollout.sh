@@ -22,8 +22,8 @@ setDefaultValues() {
     #changing the versions (Daniel) otherwise we dont have unique identifyers for hot sessions
     #DT_RELEASE_VERSION=$VERSION
     #DT_RELEASE_BUILD_VERSION=$RELEASE_RELEASENAME
-    DT_RELEASE_VERSION=$Release_ReleaseId
-    DT_RELEASE_BUILD_VERSION=$Release_ReleaseId-$VERSION
+    DT_RELEASE_VERSION=$RELEASE_RELEASEID
+    DT_RELEASE_BUILD_VERSION=$RELEASE_RELEASEID-$VERSION
 
     # RELEASE ID FROM AZDO
     #RELEASE_RELEASEID=387
@@ -41,7 +41,7 @@ exportVariables() {
     export ENVIRONMENT=$ENVIRONMENT
     export NAMESPACE=${ENVIRONMENT}-${APPLICATION}
     #export DT_RELEASE_VERSION=$VERSION
-    export DT_RELEASE_VERSION=$Release_ReleaseId
+    export DT_RELEASE_VERSION=$RELEASE_RELEASEID
     export DT_RELEASE_BUILD_VERSION=$DT_RELEASE_BUILD_VERSION
     
 }
