@@ -269,6 +269,15 @@ curl -X 'GET' \
 
 start_event_wf()
 {
+exportVariables
+echo "test"
+echo $RELEASE_RELEASEID
+echo $RELEASE_RELEASEWEBURL
+echo $DT_TENANT_URL
+echo $ENVIRONMENT
+echo $DT_RELEASE_VERSION
+echo $APPLICATION
+echo $NAMESPACE
 create_token
 res=$(curl -X 'POST' \
   "$(echo $DT_TENANT_URL)/platform/automation/v1/workflows/$(echo $DT_EVENT_WF)/run" \
