@@ -255,6 +255,7 @@ result=$(curl --request POST 'https://sso.dynatrace.com/sso/oauth2/token' \
 --data-urlencode "client_secret=$(echo $DT_CLIENTSECRET)" \
 --data-urlencode 'scope=document:documents:write document:documents:read document:documents:delete document:environment-shares:read document:environment-shares:write document:environment-shares:claim document:environment-shares:delete automation:workflows:read automation:workflows:write automation:workflows:run automation:rules:read automation:rules:write automation:calendars:read automation:calendars:write')
 result_dyna=$(echo $result | jq -r '.access_token')
+echo $result_dyna
 }
 
 get_wf_status()
@@ -287,7 +288,7 @@ res=$(curl -X 'POST' \
   -d '{
          "params": {
             "event_type": "CUSTOM_DEPLOYMENT",
-            "Release": $(echo $RELEASE_RELEASEID),
+            "Release": "$(echo $RELEASE_RELEASEID)",
             "Pipelineurl": "$(echo $RELEASE_RELEASEWEBURL)",
             "stage": "$(echo $ENVIRONMENT)",
             "Repository": "$(echo $REPOSITORY)",
