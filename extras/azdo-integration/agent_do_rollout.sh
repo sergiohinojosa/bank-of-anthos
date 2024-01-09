@@ -250,8 +250,8 @@ create_token()
 result=$(curl --request POST 'https://sso.dynatrace.com/sso/oauth2/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=client_credentials' \
---data-urlencode "client_id=${DT_CLIENTID}" \
---data-urlencode "client_secret=${DT_CLIENTSECRET}" \
+--data-urlencode "client_id=$(DT_CLIENTID)" \
+--data-urlencode "client_secret=$(DT_CLIENTSECRET)" \
 --data-urlencode 'scope=document:documents:write document:documents:read document:documents:delete document:environment-shares:read document:environment-shares:write document:environment-shares:claim document:environment-shares:delete automation:workflows:read automation:workflows:write automation:workflows:run automation:rules:read automation:rules:write automation:calendars:read automation:calendars:write')
 result_dyna=$(echo $result | jq -r '.access_token')
 echo $result_dyna
@@ -271,8 +271,8 @@ start_event_wf()
 {
 exportVariables
 echo "test"
-echo $DT_CLIENTSECRET
-echo $DT_CLIENTID
+echo $(DT_CLIENTSECRET)
+echo $(DT_CLIENTID)
 echo $RELEASE_RELEASEID
 echo $RELEASE_RELEASEWEBURL
 echo $DT_TENANT_URL
