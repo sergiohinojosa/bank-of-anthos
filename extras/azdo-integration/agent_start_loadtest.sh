@@ -6,8 +6,8 @@ create_token()
 result=$(curl --request POST 'https://sso.dynatrace.com/sso/oauth2/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=client_credentials' \
---data-urlencode "client_id=$(dt_clientid)" \
---data-urlencode "client_secret=$(dt_clientsecret)" \
+--data-urlencode "client_id=$(DT_CLIENTID)" \
+--data-urlencode "client_secret=$(DT_CLIENTSECRET)" \
 --data-urlencode 'scope=document:documents:write document:documents:read document:documents:delete document:environment-shares:read document:environment-shares:write document:environment-shares:claim document:environment-shares:delete automation:workflows:read automation:workflows:write automation:workflows:run automation:rules:read automation:rules:write automation:calendars:read automation:calendars:write')
 result_dyna=$(echo $result | jq -r '.access_token')
 }
@@ -16,7 +16,7 @@ get_wf_status()
 {
 create_token
 curl -X 'GET' \
-  "$(dt_tenant_url)/platform/automation/v1/executions/$(echo $id)" \
+  "$(DT_TENANT_URL)/platform/automation/v1/executions/$(echo $id)" \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -H "authorization: Bearer $(echo $result_dyna)" | jq -r '.state'
@@ -24,14 +24,11 @@ curl -X 'GET' \
 
 start_test_wf()
 {
-export dt_event_wf=$DT_EVENT_WF
-export dt_clientsecret=$DT_CLIENTSECRET
-export dt_tenant_url=$DT_TENANT_URL
-export dt_clientid=$DT_CLIENTID
+
 
 create_token
 res=$(curl -X 'POST' \
-  "$(dt_tenant_url)/platform/automation/v1/workflows/$(dt_event_wf)/run" \
+  "$(DT_TENANT_URL)/platform/automation/v1/workflows/$(DT_EVENT_WF)/run" \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -H "authorization: Bearer $(echo $result_dyna)" \
@@ -61,7 +58,7 @@ stop_test_wf()
 {
 create_token
 res=$(curl -X 'POST' \
-  "$(dt_tenant_url)/platform/automation/v1/workflows/$(dt_event_wf)/run" \
+  "$(DT_TENANT_URL)/platform/automation/v1/workflows/$(DT_EVENT_WF)/run" \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -H "authorization: Bearer $(echo $result_dyna)" \
