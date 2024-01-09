@@ -660,6 +660,8 @@ items:
             value: ${JVM_OPTS}
           - name: LOG_LEVEL
             value: ${LOG_LEVEL}
+          - name: EXTRA_LATENCY_MILLIS
+            value: ${EXTRA_LATENCY_MILLIS}
           - name: NAMESPACE
             valueFrom:
               fieldRef:

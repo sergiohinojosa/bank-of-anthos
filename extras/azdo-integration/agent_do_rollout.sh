@@ -17,6 +17,7 @@ setDefaultValues() {
     NAMESPACE=${ENVIRONMENT}-${APPLICATION}
     YAMLFILE=$(date '+%Y-%m-%d_%H_%M_%S').yaml
     RESET_DB=false
+    EXTRA_LATENCY_MILLIS=0
 
     # Release Info from AzDo
     DT_RELEASE_VERSION=$RELEASE_RELEASEID
@@ -40,6 +41,8 @@ exportVariables() {
     export RELEASE_RELEASEID=$RELEASE_RELEASEID
     export DT_RELEASE_VERSION=$RELEASE_RELEASEID
     export DT_RELEASE_BUILD_VERSION=$RELEASE_RELEASENAME.$VERSION
+    # Envs with problems
+    export EXTRA_LATENCY_MILLIS=$EXTRA_LATENCY_MILLIS
 }
 
 printOutput() {
@@ -62,25 +65,24 @@ printOutput() {
 
 calculateVersion() {
     #Date in 12 Hour format (01-12)
+    # Problems in PODs
+    # BalanceReader 1.0.1  - CPU Issue
+    # LedgeWriter 1.0.2  - MemoryLeak
+    #  XXXX Synch Issue -
+    # ENV Variable EXTRA_LATENCY_MILLIS for Production
     h=$(date +"%I")
     case $h in
-    "12" | "06")
+    "12" | "04" | "08" )
         VERSION="1.0.0"
         ;;
-    "01" | "07")
+    "01" | "05" | "09")
         VERSION="1.0.1"
         ;;
-    "02" | "08")
+    "02" | "06" | "10")
         VERSION="1.0.2"
         ;;
-    "03" | "09")
-        VERSION="1.0.0"
-        ;;
-    "04" | "10")
-        VERSION="1.0.1"
-        ;;
-    "05" | "11")
-        VERSION="1.0.2"
+    "03" | "07"| "11")
+        VERSION="1.0.3"
         ;;
     esac
     echo "The hour is $h and the Version selected is $VERSION"
