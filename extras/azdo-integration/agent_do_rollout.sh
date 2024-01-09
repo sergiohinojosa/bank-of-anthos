@@ -45,6 +45,9 @@ exportVariables() {
     export DT_RELEASE_BUILD_VERSION=$RELEASE_RELEASENAME.$VERSION
     # Envs with problems
     export EXTRA_LATENCY_MILLIS=$EXTRA_LATENCY_MILLIS
+    export dt_event_wf=$DT_EVENT_WF
+    echo $DT_EVENT_WF
+    echo $dt_event_wf=
 }
 
 printOutput() {
