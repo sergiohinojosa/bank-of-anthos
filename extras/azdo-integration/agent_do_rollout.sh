@@ -45,9 +45,6 @@ exportVariables() {
     export DT_RELEASE_BUILD_VERSION=$RELEASE_RELEASENAME.$VERSION
     # Envs with problems
     export EXTRA_LATENCY_MILLIS=$EXTRA_LATENCY_MILLIS
-    export DT_EVENT_WF=$DT_EVENT_WF
-    export DT_TENANT_URL=$DT_TENANT_URL
-
 
     
 
@@ -245,69 +242,6 @@ while getopts e:v:d:h:c: flag; do
     esac
 done
 
-create_token()
-{
-result=$(curl --request POST 'https://sso.dynatrace.com/sso/oauth2/token' \
---header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'grant_type=client_credentials' \
---data-urlencode "client_id=$env:DT_CLIENT_ID" \
---data-urlencode "client_secret=$env:DT_CLIENT_SECRET" \
---data-urlencode 'scope=document:documents:write document:documents:read document:documents:delete document:environment-shares:read document:environment-shares:write document:environment-shares:claim document:environment-shares:delete automation:workflows:read automation:workflows:write automation:workflows:run automation:rules:read automation:rules:write automation:calendars:read automation:calendars:write')
-result_dyna=$(echo $result | jq -r '.access_token')
-echo $result_dyna
-}
-
-get_wf_status()
-{
-create_token
-curl -X 'GET' \
-  "${DT_TENANT_URL}/platform/automation/v1/executions/$(echo $id)" \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -H "authorization: Bearer $(echo $result_dyna)" | jq -r '.state'
-}
-
-start_event_wf()
-{
-exportVariables
-echo "test"
-echo $env:DT_CLIENT_ID
-echo $env:DT_CLIENT_SECRET
-echo $RELEASE_RELEASEID
-echo $RELEASE_RELEASEWEBURL
-echo $DT_TENANT_URL
-echo $ENVIRONMENT
-echo $DT_RELEASE_VERSION
-echo $APPLICATION
-echo $NAMESPACE
-create_token
-res=$(curl -X 'POST' \
-  "${DT_TENANT_URL}/platform/automation/v1/workflows/${DT_EVENT_WF}/run" \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -H "authorization: Bearer $(echo $result_dyna)" \
-  -d '{
-         "params": {
-            "event_type": "CUSTOM_DEPLOYMENT",
-            "Release": "${RELEASE_RELEASEID}",
-            "Pipelineurl": "${RELEASE_RELEASEWEBURL}",
-            "stage": "${ENVIRONMENT}",
-            "Repository": "${REPOSITORY}",
-            "Release_Version": "${DT_RELEASE_VERSION}",
-            "Application": "${APPLICATION}",
-            "Namespace": "${NAMESPACE}",
-            "Build_Version": "${DT_RELEASE_BUILD_VERSION}"            
-         }
-         }')
-id=$(echo $res | jq -r '.id')
-echo $id
-while [[ $(get_wf_status) == "RUNNING" ]]; do
-sleep 10
-done
-
-}
-
-
 
 setOutputVariables() 
 {
@@ -325,7 +259,5 @@ exportVariables
 applyDeploymentChange
 
 printDeployments
-
-start_event_wf
 
 setOutputVariables
