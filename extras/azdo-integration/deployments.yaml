@@ -11,7 +11,6 @@ items:
       environment: ${ENVIRONMENT}
       team: ledger
       tier: backend
-      app.kubernetes.io/version: ${VERSION}
     annotations:
   spec:
     replicas: 1
@@ -165,7 +164,6 @@ items:
       environment: ${ENVIRONMENT}
       team: accounts
       tier: backend
-      app.kubernetes.io/version: ${VERSION}
     name: contacts
     namespace: ${NAMESPACE}
   spec:
@@ -468,7 +466,6 @@ items:
       environment: ${ENVIRONMENT}
       team: ledger
       tier: backend
-      app.kubernetes.io/version: ${VERSION}
   spec:
     progressDeadlineSeconds: 600
     replicas: 1
@@ -611,7 +608,6 @@ items:
       environment: ${ENVIRONMENT}
       team: ledger
       tier: backend
-      app.kubernetes.io/version: ${VERSION}
     name: transactionhistory
     namespace: ${NAMESPACE}
   spec:
@@ -772,7 +768,6 @@ items:
       environment: ${ENVIRONMENT}
       team: accounts
       tier: backend
-      app.kubernetes.io/version: ${VERSION}
     name: userservice
     namespace: ${NAMESPACE}
   spec:
