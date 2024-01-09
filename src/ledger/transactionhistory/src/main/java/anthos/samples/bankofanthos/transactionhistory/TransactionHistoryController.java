@@ -184,10 +184,10 @@ public final class TransactionHistoryController {
 
             // Load from cache
             Deque<Transaction> historyList = getFromImprovedCache(cache, accountId);
-
-            // Set artificial extra latency.
-            LOGGER.debug("Setting artificial latency");
-            if (extraLatencyMillis != null) {
+            
+            if (extraLatencyMillis != null && extraLatencyMillis > 0) {
+                // Set artificial extra latency.
+                LOGGER.debug("Setting artificial latency");
                 try {
                     Thread.sleep(extraLatencyMillis);
                 } catch (InterruptedException e) {
@@ -225,10 +225,15 @@ public final class TransactionHistoryController {
     public synchronized Deque<Transaction> getFromImprovedCache(LoadingCache<String, Deque<Transaction>> cache, String accountId) throws ExecutionException, InterruptedException {
         
         // Adding a sleep s fo
-        LOGGER.debug("Cleaning cache");
-        cache.cleanUp();
-        LOGGER.debug("Sleeping for the Synch to Kick In");
-        Thread.sleep(100);
+        LOGGER.debug("Invalidating cache");
+        cache.invalidate(accountId);
+        Thread.sleep(10);
+        cache.get(accountId);
+        cache.invalidate(accountId);
+        Thread.sleep(10);
+        cache.get(accountId);
+        cache.invalidate(accountId);
+        Thread.sleep(10);
         return cache.get(accountId);
     }
 
