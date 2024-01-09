@@ -68,8 +68,8 @@ calculateVersion() {
     # Problems in PODs
     # BalanceReader 1.0.1  - CPU Issue
     # LedgeWriter 1.0.2  - MemoryLeak
-    #  XXXX Synch Issue -
-    # ENV Variable EXTRA_LATENCY_MILLIS for Production
+    # TransactionHistory 1.03 - Synch Issue (synchronized + sleep)
+    # ENV Variable EXTRA_LATENCY_MILLIS for Production 
     h=$(date +"%I")
     case $h in
     "12" | "04" | "08" )
