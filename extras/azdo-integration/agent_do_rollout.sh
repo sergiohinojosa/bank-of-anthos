@@ -272,6 +272,8 @@ start_event_wf()
 {
 exportVariables
 echo "test"
+echo $DT_CLIENTSECRET
+echo $DT_CLIENTID
 echo $RELEASE_RELEASEID
 echo $RELEASE_RELEASEWEBURL
 echo $DT_TENANT_URL
