@@ -184,10 +184,10 @@ public final class TransactionHistoryController {
             // Load from cache
             Deque<Transaction> historyList = cache.get(accountId);
 
-            // Set artificial extra latency.
-            LOGGER.debug("Setting artificial latency");
-            if (extraLatencyMillis != null) {
+            if (extraLatencyMillis != null && extraLatencyMillis > 0) {
                 try {
+                    // Set artificial extra latency.
+                    LOGGER.debug("Setting artificial latency");
                     Thread.sleep(extraLatencyMillis);
                 } catch (InterruptedException e) {
                     // Fake latency interrupted. Continue.
