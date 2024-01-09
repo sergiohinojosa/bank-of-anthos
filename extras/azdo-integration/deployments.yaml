@@ -62,9 +62,9 @@ items:
                 apiVersion: v1
                 fieldPath: metadata.namespace
           - name: DT_RELEASE_VERSION
-            value: ${DT_RELEASE_VERSION}
+            value: "${DT_RELEASE_VERSION}"
           - name: DT_RELEASE_BUILD_VERSION
-            value: ${DT_RELEASE_BUILD_VERSION}
+            value: "${DT_RELEASE_BUILD_VERSION}"
           - name: DT_RELEASE_STAGE
             valueFrom:
               fieldRef:
@@ -205,9 +205,9 @@ items:
           - name: LOG_LEVEL
             value: ${LOG_LEVEL}
           - name: DT_RELEASE_VERSION
-            value: ${DT_RELEASE_VERSION}
+            value: "${DT_RELEASE_VERSION}"
           - name: DT_RELEASE_BUILD_VERSION
-            value: ${DT_RELEASE_BUILD_VERSION}
+            value: "${DT_RELEASE_BUILD_VERSION}"
           - name: DT_RELEASE_STAGE
             valueFrom:
               fieldRef:
@@ -373,9 +373,9 @@ items:
                 key: DT_ENDPOINT
                 name: dynatrace-secret
           - name: DT_RELEASE_VERSION
-            value: ${DT_RELEASE_VERSION}
+            value: "${DT_RELEASE_VERSION}"
           - name: DT_RELEASE_BUILD_VERSION
-            value: ${DT_RELEASE_BUILD_VERSION}
+            value: "${DT_RELEASE_BUILD_VERSION}"
           - name: DT_RELEASE_STAGE
             valueFrom:
               fieldRef:
@@ -514,9 +514,9 @@ items:
                 apiVersion: v1
                 fieldPath: metadata.namespace
           - name: DT_RELEASE_VERSION
-            value: ${DT_RELEASE_VERSION}
+            value: "${DT_RELEASE_VERSION}"
           - name: DT_RELEASE_BUILD_VERSION
-            value: ${DT_RELEASE_BUILD_VERSION}
+            value: "${DT_RELEASE_BUILD_VERSION}"
           - name: DT_RELEASE_STAGE
             valueFrom:
               fieldRef:
@@ -666,9 +666,9 @@ items:
                 apiVersion: v1
                 fieldPath: metadata.namespace
           - name: DT_RELEASE_VERSION
-            value: ${DT_RELEASE_VERSION}
+            value: "${DT_RELEASE_VERSION}"
           - name: DT_RELEASE_BUILD_VERSION
-            value: ${DT_RELEASE_BUILD_VERSION}
+            value: "${DT_RELEASE_BUILD_VERSION}"
           - name: DT_RELEASE_STAGE
             valueFrom:
               fieldRef:
@@ -823,9 +823,9 @@ items:
                 key: DT_ENDPOINT
                 name: dynatrace-secret
           - name: DT_RELEASE_VERSION
-            value: ${DT_RELEASE_VERSION}
+            value: "${DT_RELEASE_VERSION}"
           - name: DT_RELEASE_BUILD_VERSION
-            value: ${DT_RELEASE_BUILD_VERSION}
+            value: "${DT_RELEASE_BUILD_VERSION}"
           - name: DT_RELEASE_STAGE
             valueFrom:
               fieldRef:
