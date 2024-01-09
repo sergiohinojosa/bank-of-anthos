@@ -5,6 +5,8 @@ setDefaultValues() {
     if [ -z "$RELEASE_RELEASENAME" ]; then
         echo "\$RELEASE_RELEASENAME is empty"
         RELEASE_RELEASENAME="Release-000"
+
+        RELEASE_RELEASEID="001"
     fi
     # Default Variabes
     REPOSITORY="gcr.io/sales-engineering-emea/bank-of-anthos"
