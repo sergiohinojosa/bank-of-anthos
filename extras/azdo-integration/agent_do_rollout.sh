@@ -46,9 +46,8 @@ exportVariables() {
     # Envs with problems
     export EXTRA_LATENCY_MILLIS=$EXTRA_LATENCY_MILLIS
     export DT_EVENT_WF=$DT_EVENT_WF
-    export DT_CLIENTSECRET=$DT_CLIENTSECRET
     export DT_TENANT_URL=$DT_TENANT_URL
-    export DT_CLIENTID=$DT_CLIENTID
+
 
     
 
