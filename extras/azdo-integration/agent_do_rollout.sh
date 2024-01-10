@@ -227,6 +227,7 @@ while getopts e:v:d:h:c: flag; do
         ;;
     v) # overwrite version from pipeline
         VERSION=${OPTARG}
+        PROBLEM="manual_overwrite"
         ;;
     d) # we delete/init the statefulset database
         RESET_DB=true
