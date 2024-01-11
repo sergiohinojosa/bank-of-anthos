@@ -9,7 +9,7 @@ items:
     labels:
       application: ${APPLICATION}
       environment: ${ENVIRONMENT}
-      team: ledger
+      dt.owner: ledger
       tier: backend
     annotations:
   spec:
@@ -19,7 +19,7 @@ items:
         app: balancereader
         application: ${APPLICATION}
         environment: ${ENVIRONMENT}
-        team: ledger
+        dt.owner: ledger
         tier: backend
     strategy:
       rollingUpdate:
@@ -35,7 +35,7 @@ items:
           app: balancereader
           application: ${APPLICATION}
           environment: ${ENVIRONMENT}
-          team: ledger
+          dt.owner: ledger
           tier: backend
       spec:
         containers:
@@ -162,7 +162,7 @@ items:
     labels:
       application: ${APPLICATION}
       environment: ${ENVIRONMENT}
-      team: accounts
+      dt.owner: accounts
       tier: backend
     name: contacts
     namespace: ${NAMESPACE}
@@ -175,7 +175,7 @@ items:
         app: contacts
         application: ${APPLICATION}
         environment: ${ENVIRONMENT}
-        team: accounts
+        dt.owner: accounts
         tier: backend
     strategy:
       rollingUpdate:
@@ -191,7 +191,7 @@ items:
           app: contacts
           application: ${APPLICATION}
           environment: ${ENVIRONMENT}
-          team: accounts
+          dt.owner: accounts
           tier: backend
       spec:
         containers:
@@ -296,7 +296,7 @@ items:
     labels:
       application: ${APPLICATION}
       environment: ${ENVIRONMENT}
-      team: frontend
+      dt.owner: frontend
       tier: web
     name: frontend
     namespace: ${NAMESPACE}
@@ -309,7 +309,7 @@ items:
         app: frontend
         application: ${APPLICATION}
         environment: ${ENVIRONMENT}
-        team: frontend
+        dt.owner: frontend
         tier: web
     strategy:
       rollingUpdate:
@@ -325,7 +325,7 @@ items:
           app: frontend
           application: ${APPLICATION}
           environment: ${ENVIRONMENT}
-          team: frontend
+          dt.owner: frontend
           tier: web
       spec:
         containers:
@@ -464,7 +464,7 @@ items:
     labels:
       application: ${APPLICATION}
       environment: ${ENVIRONMENT}
-      team: ledger
+      dt.owner: ledger
       tier: backend
   spec:
     progressDeadlineSeconds: 600
@@ -475,7 +475,7 @@ items:
         app: ledgerwriter
         application: ${APPLICATION}
         environment: ${ENVIRONMENT}
-        team: ledger
+        dt.owner: ledger
         tier: backend
     strategy:
       rollingUpdate:
@@ -491,7 +491,7 @@ items:
           app: ledgerwriter
           application: ${APPLICATION}
           environment: ${ENVIRONMENT}
-          team: ledger
+          dt.owner: ledger
           tier: backend
       spec:
         containers:
@@ -606,7 +606,7 @@ items:
     labels:
       application: ${APPLICATION}
       environment: ${ENVIRONMENT}
-      team: ledger
+      dt.owner: ledger
       tier: backend
     name: transactionhistory
     namespace: ${NAMESPACE}
@@ -619,7 +619,7 @@ items:
         app: transactionhistory
         application: ${APPLICATION}
         environment: ${ENVIRONMENT}
-        team: ledger
+        dt.owner: ledger
         tier: backend
     strategy:
       rollingUpdate:
@@ -635,7 +635,7 @@ items:
           app: transactionhistory
           application: ${APPLICATION}
           environment: ${ENVIRONMENT}
-          team: ledger
+          dt.owner: ledger
           tier: backend
       spec:
         containers:
@@ -768,7 +768,7 @@ items:
     labels:
       application: ${APPLICATION}
       environment: ${ENVIRONMENT}
-      team: accounts
+      dt.owner: accounts
       tier: backend
     name: userservice
     namespace: ${NAMESPACE}
@@ -781,7 +781,7 @@ items:
         app: userservice
         application: ${APPLICATION}
         environment: ${ENVIRONMENT}
-        team: accounts
+        dt.owner: accounts
         tier: backend
     strategy:
       rollingUpdate:
@@ -797,7 +797,7 @@ items:
           app: userservice
           application: ${APPLICATION}
           environment: ${ENVIRONMENT}
-          team: accounts
+          dt.owner: accounts
           tier: backend
       spec:
         containers:
