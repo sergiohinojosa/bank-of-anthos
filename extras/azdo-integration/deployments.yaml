@@ -10,6 +10,7 @@ items:
       application: ${APPLICATION}
       environment: ${ENVIRONMENT}
       team: ledger
+      dt.owner: ledger
       tier: backend
     annotations:
   spec:
@@ -36,6 +37,7 @@ items:
           application: ${APPLICATION}
           environment: ${ENVIRONMENT}
           team: ledger
+          dt.owner: ledger
           tier: backend
       spec:
         containers:
@@ -163,6 +165,7 @@ items:
       application: ${APPLICATION}
       environment: ${ENVIRONMENT}
       team: accounts
+      dt.owner: accounts
       tier: backend
     name: contacts
     namespace: ${NAMESPACE}
@@ -192,6 +195,7 @@ items:
           application: ${APPLICATION}
           environment: ${ENVIRONMENT}
           team: accounts
+          dt.owner: accounts
           tier: backend
       spec:
         containers:
@@ -297,6 +301,7 @@ items:
       application: ${APPLICATION}
       environment: ${ENVIRONMENT}
       team: frontend
+      dt.owner: frontend
       tier: web
     name: frontend
     namespace: ${NAMESPACE}
@@ -326,6 +331,7 @@ items:
           application: ${APPLICATION}
           environment: ${ENVIRONMENT}
           team: frontend
+          dt.owner: frontend
           tier: web
       spec:
         containers:
@@ -465,6 +471,7 @@ items:
       application: ${APPLICATION}
       environment: ${ENVIRONMENT}
       team: ledger
+      dt.owner: ledger
       tier: backend
   spec:
     progressDeadlineSeconds: 600
@@ -492,6 +499,7 @@ items:
           application: ${APPLICATION}
           environment: ${ENVIRONMENT}
           team: ledger
+          dt.owner: ledger
           tier: backend
       spec:
         containers:
@@ -607,6 +615,7 @@ items:
       application: ${APPLICATION}
       environment: ${ENVIRONMENT}
       team: ledger
+      dt.owner: ledger
       tier: backend
     name: transactionhistory
     namespace: ${NAMESPACE}
@@ -636,6 +645,7 @@ items:
           application: ${APPLICATION}
           environment: ${ENVIRONMENT}
           team: ledger
+          dt.owner: ledger
           tier: backend
       spec:
         containers:
@@ -769,6 +779,7 @@ items:
       application: ${APPLICATION}
       environment: ${ENVIRONMENT}
       team: accounts
+      dt.owner: accounts
       tier: backend
     name: userservice
     namespace: ${NAMESPACE}
@@ -798,6 +809,7 @@ items:
           application: ${APPLICATION}
           environment: ${ENVIRONMENT}
           team: accounts
+          dt.owner: accounts
           tier: backend
       spec:
         containers:
