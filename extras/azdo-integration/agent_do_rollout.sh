@@ -22,7 +22,7 @@ setDefaultValues() {
     EXTRA_LATENCY_MILLIS=0
 
     # Release Info from AzDo
-    DT_RELEASE_VERSION=$RELEASE_RELEASEID
+    DT_RELEASE_VERSION=${RELEASE_RELEASENAME##*-}
     DT_RELEASE_BUILD_VERSION=$RELEASE_RELEASENAME.$VERSION
 
     # RELEASE ID FROM AZDO
@@ -40,11 +40,14 @@ exportVariables() {
     export APPLICATION=$APPLICATION
     export ENVIRONMENT=$ENVIRONMENT
     export NAMESPACE=${ENVIRONMENT}-${APPLICATION}
-    export RELEASE_RELEASEID=$RELEASE_RELEASEID
-    export DT_RELEASE_VERSION=$RELEASE_RELEASEID
+    export RELEASE_RELEASEID=${RELEASE_RELEASENAME##*-}
+    export DT_RELEASE_VERSION=${RELEASE_RELEASENAME##*-}
     export DT_RELEASE_BUILD_VERSION=$RELEASE_RELEASENAME.$VERSION
     # Envs with problems
     export EXTRA_LATENCY_MILLIS=$EXTRA_LATENCY_MILLIS
+
+    
+
 }
 
 printOutput() {
@@ -76,18 +79,22 @@ calculateVersion() {
     case $h in
     "12" | "04" | "08" )
         VERSION="1.0.0"
+        PROBLEM="none"
         ;;
     "01" | "05" | "09")
         VERSION="1.0.1"
+        PROBLEM="cpu"
         ;;
     "02" | "06" | "10")
         VERSION="1.0.2"
+        PROBLEM="memory"
         ;;
     "03" | "07"| "11")
         VERSION="1.0.3"
+        PROBLEM="n+1"
         ;;
     esac
-    echo "The hour is $h and the Version selected is $VERSION"
+    echo "The hour is $h and the Version selected is $VERSION with the problem $PROBLEM"
 }
 
 printDeployments() {
@@ -220,6 +227,7 @@ while getopts e:v:d:h:c: flag; do
         ;;
     v) # overwrite version from pipeline
         VERSION=${OPTARG}
+        PROBLEM="manual_overwrite"
         ;;
     d) # we delete/init the statefulset database
         RESET_DB=true
@@ -239,8 +247,23 @@ while getopts e:v:d:h:c: flag; do
     esac
 done
 
+
+setOutputVariables() 
+{
+echo "##vso[task.setvariable variable=DT_RELEASE_VERSION]$DT_RELEASE_VERSION"
+echo "##vso[task.setvariable variable=DT_RELEASE_BUILD_VERSION]$DT_RELEASE_BUILD_VERSION"
+echo "##vso[task.setvariable variable=REPOSITORY]$REPOSITORY"
+echo "##vso[task.setvariable variable=APPLICATION]$APPLICATION"
+echo "##vso[task.setvariable variable=ENVIRONMENT]$ENVIRONMENT"
+echo "##vso[task.setvariable variable=NAMESPACE]$NAMESPACE"
+echo "##vso[task.setvariable variable=PROBLEM]$PROBLEM"
+}
+
+
 exportVariables
 
 applyDeploymentChange
 
 printDeployments
+
+setOutputVariables

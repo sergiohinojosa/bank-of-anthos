@@ -1,11 +1,15 @@
 #!/bin/bash
 
+
+
+
 JMX_FILE=$AGENT_RELEASEDIRECTORY/$RELEASE_PRIMARYARTIFACTSOURCEALIAS/extras/jmeter/Test_Banking_Process.jmx
 
 start_performance_test() {
 
     echo "Pointing to $SERVER_URL with VirtualUsers $VU and Loops $LOOPS"
     echo "Loading Loadtest $JMX_FILE"
+    
 
     /opt/jmeter/apache-jmeter-5.5/bin/jmeter -n -t $JMX_FILE -JSERVER_URL=$SERVER_URL -JVUCount=$VU -JLoopCount=$LOOPS  -l testreport.jtl
 }
