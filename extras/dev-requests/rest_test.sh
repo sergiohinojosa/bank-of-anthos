@@ -1,24 +1,23 @@
-
 #!/bin/bash
 
-bankofAnthosURL="development-banking.34-118-0-68.sslip.io"
+bankofAnthosURL="development-banking.whydevslovedynatrace.com"
 developer_name=""
 developer_pass=""
 
-get_signin_body() {
+get_signup_body() {
 cat <<EOF
 username=$developer_name&\
 password=$developer_pass&\
 password-repeat=$developer_pass&\
 firstname=$developer_name&\
 lastname=$developer_name&\
+birthday=2000-01-01&\
+timezone=-5&\
 address=123+Nth+Avenue%2C+New+York+City&\
-country=United+States&\
 state=NY&\
 zip=10004&\
 ssn=111-22-3333&\
-birthday=2023-12-07&\
-timezone=-5
+country=United+States
 EOF
 }
 
@@ -29,19 +28,19 @@ password=$developer_pass
 EOF
 }
 
-do_signin() {
-    result=$(curl -v -X POST "http://$bankofAnthosURL/signup" \
-        -H "accept: application/json" \
+do_signup() {
+    result=$(curl -v -X POST "https://$bankofAnthosURL/signup" \
+        -H "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7" \
         -H "x-developer: $developer_name" \
         -H "Content-Type: application/x-www-form-urlencoded" \
-        -d "$(get_signin_body)"
+        -d "$(get_signup_body)"
         )
         echo "$result";
 
 }
 
 do_login() {
-    result=$(curl -v -X POST "http://$bankofAnthosURL/login" \
+    result=$(curl -v -X POST "https://$bankofAnthosURL/login" \
         -H "accept: application/json" \
         -H "x-developer: $developer_name" \
         -H "Content-Type: application/x-www-form-urlencoded" \
@@ -51,17 +50,17 @@ do_login() {
 }
 
 print_usage() {
-    echo "Usage: bash rest_test.sh [test_function] [developer_name] [developer_pass]    "
-    echo "                                                                "
-    echo "test_function                                                   "
-    echo "   signin                          creates the given account    "
-    echo "   login                           logins to an account         "
-    echo "                                                                "
-    echo "================================================================"
+    echo "Usage: bash rest_test.sh [test_function] [developer_name] [developer_pass] "
+    echo "                                                                           "
+    echo "test_function                                                              "
+    echo "   signup                          creates the given account               "
+    echo "   login                           logins to an account                    "
+    echo "                                                                           "
+    echo "==========================================================================="
 }
 
 echo "================================================================"
-echo "EasyTravel REST Developer Tester                                "
+echo " Bank REST Developer Tester                                     "
 echo "================================================================"
 
 if [[ $# -eq 3 ]]; then
@@ -71,12 +70,13 @@ if [[ $# -eq 3 ]]; then
     developer_pass=$3
 
     case $test_function in
-    signin)
+    signup)
         echo "----------------------------------------------"
-        echo "SignIn: Creating an Account for developer:$developer_name with the following Payload:"
+        echo "SignUp: Creating an Account for developer:$developer_name with the following Payload:"
         echo ""
-        echo "$(get_signin_body)"
-        do_signin
+        echo "$(get_signup_body)"
+        echo ""
+        do_signup
         ;;
 
     login)
