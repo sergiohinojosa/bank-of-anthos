@@ -224,16 +224,22 @@ public final class TransactionHistoryController {
      */
     public synchronized Deque<Transaction> getFromImprovedCache(LoadingCache<String, Deque<Transaction>> cache, String accountId) throws ExecutionException, InterruptedException {
         
-        // Adding a sleep s fo
+        // Adding a sleep 50ms 
         LOGGER.debug("Invalidating cache");
         cache.invalidate(accountId);
-        Thread.sleep(10);
+        Thread.sleep(50);
         cache.get(accountId);
         cache.invalidate(accountId);
-        Thread.sleep(10);
+        Thread.sleep(50);
         cache.get(accountId);
         cache.invalidate(accountId);
-        Thread.sleep(10);
+        Thread.sleep(50);
+        cache.get(accountId);
+        cache.invalidate(accountId);
+        Thread.sleep(50);
+        cache.get(accountId);
+        cache.invalidate(accountId);
+        Thread.sleep(50);
         return cache.get(accountId);
     }
 
